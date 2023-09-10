@@ -1,4 +1,4 @@
-function test(shift) {
+function bitcoinMining(shift) {
     const oneBitcoin = 11949.16;
     const oneGOfGold = 67.51;
   
