@@ -1,4 +1,4 @@
-function test(username) {
+function login(username) {
   let trueUsername = username.shift();
   let guesses = 0;
   let password = trueUsername.split("").reverse().join("");
