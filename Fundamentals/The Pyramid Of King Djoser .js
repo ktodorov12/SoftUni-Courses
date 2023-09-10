@@ -1,4 +1,4 @@
-function test(base, increment) {
+function pyramid(base, increment) {
     let stoneNeeded = 0;
     let marbleNeeded = 0;
     let lapisNeeded = 0;
