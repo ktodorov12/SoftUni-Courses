@@ -6,4 +6,4 @@ function sum(number){
   }
   console.log(sum);
 }
-sum(124124);
+sum(245678);

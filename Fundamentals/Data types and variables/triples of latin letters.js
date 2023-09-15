@@ -1,12 +1,13 @@
-function latin(number){
-    
-    for (let i = 0; i < number;i++){
-        let letter = String.fromCharCode(97+number)
-        for(let j = 0; j < i; j++){
-            for (let p = 0; p < j; p++){
-                console.log(letter)
-            }
-        }
+function latin(n) {
+  for (let i = 0; i < n; i++) {
+    let firstLetter = String.fromCharCode(97 + i);
+    for (let j = 0; j < n; j++) {
+      let secondLetter = String.fromCharCode(97 + j);
+      for (let x = 0; x < n; x++) {
+        let thirdLetter = String.fromCharCode(97 + x);
+        console.log(`${firstLetter}${secondLetter}${thirdLetter}`);
+      }
     }
+  }
 }
-latin(3)
+latin(3);
