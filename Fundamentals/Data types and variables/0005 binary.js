@@ -9,4 +9,4 @@ function binary(number){
     console.log(result / 2)
 }
 
-binary("11110000")
+binary("11101010101")
