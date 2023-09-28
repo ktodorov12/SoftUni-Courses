@@ -3,7 +3,7 @@ function week(number) {
     "Monday",
     "Tuesday",
     "Wednesday",
-    "Thurstday",
+    "Thursday",
     "Friday",
     "Saturday",
     "Sunday",
