@@ -7,4 +7,8 @@ function rev(arr) {
   console.log(arr.join(" "));
 }
 
-rev(['33', '123', '0', 'dd']);
+rev(["33", "123", "0", "dd"]);
+// fast
+const revTwo = (arr) => console.log(arr.reverse().join(" "));
+
+revTwo(["33", "123", "0", "dd"])
