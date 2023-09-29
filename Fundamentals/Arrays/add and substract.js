@@ -2,13 +2,15 @@ function add(numbers) {
   let sumOfOriginal = 0;
   let sumOfNew = 0;
   for (let i = 0; i < numbers.length; i++) {
-    sumOfOriginal += numbers[i]
+    let num = numbers[i]
+    sumOfOriginal += num
     if (numbers[i] % 2 != 0) {
-      numbers[i] = numbers[i] - i;
+      num -= i;
     } else {
-      numbers[i] = numbers[i] + i;
+      num += i;
     }
-    sumOfNew += numbers[i];
+    numbers[i] = num
+    sumOfNew += num;
   }
   console.log(numbers);
   console.log(sumOfOriginal);
