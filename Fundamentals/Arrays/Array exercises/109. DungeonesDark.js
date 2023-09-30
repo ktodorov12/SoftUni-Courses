@@ -8,6 +8,7 @@ function dungeon(rooms) {
     let room = separate[i].split(" ");
     let item = room[0];
     let value = Number(room[1]);
+    roomsPassed++;
 
     if (item === "potion") {
       health = health + value;
@@ -20,19 +21,17 @@ function dungeon(rooms) {
 
       console.log(`You healed for ${value} hp.`);
       console.log(`Current health: ${health} hp.`);
-      roomsPassed++;
+
     } else if (item === "chest") {
       coins += value;
       console.log(`You found ${value} coins.`);
-      roomsPassed++;
+      
     } else {
       health -= value;
 
       if (health > 0) {
-        roomsPassed++;
         console.log(`You slayed ${item}.`);
       } else {
-        roomsPassed++;
         console.log(`You died! Killed by ${item}.`);
         console.log(`Best room: ${roomsPassed}`);
         break;
@@ -46,4 +45,4 @@ function dungeon(rooms) {
   }
 }
 
-dungeon(["cat 10|potion 30|orc 10|chest 10|snake 25|chest 110"]);
+dungeon(["rat 10|bat 20|potion 10|rat 10|chest 100|boss 70|chest 1000"]);
