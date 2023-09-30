@@ -6,11 +6,7 @@ function equal(numbers) {
   for (let i = 0; i < numbersLength; i++) {
     let leftSum = 0;
     let rightSum = 0;
-    if (i === 0) {
-      leftSum = 0;
-    } else if (i === numbers.length - 1) {
-      rightSum = 0;
-    }
+
     for (let j = 0; j < numbersLength; j++) {
       let currentNum = numbers[j];
       if (i > j) {
@@ -19,6 +15,7 @@ function equal(numbers) {
         rightSum += currentNum;
       }
     }
+
     if (leftSum === rightSum) {
       isEqual = true;
       index = i;
@@ -27,6 +24,7 @@ function equal(numbers) {
       isEqual = false;
     }
   }
+
   if (isEqual) {
     console.log(index);
   } else {
