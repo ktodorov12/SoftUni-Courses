@@ -13,6 +13,7 @@ function ladybugs(array) {
   }
 
   for (let i = 2; i < array.length; i++) {
+    //destructoring
     let [index, command, flyight] = array[i].split(' ')
     index = Number(index);
     flyight = Number(flyight);
