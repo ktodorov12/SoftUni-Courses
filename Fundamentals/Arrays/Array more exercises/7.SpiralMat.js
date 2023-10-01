@@ -50,4 +50,4 @@ function matrix(n) {
   matrixArray.forEach((row) => console.log(row.join(" ")));
 }
 
-matrix(3, 3);
+matrix(7, 7);
