@@ -1,0 +1,9 @@
+function diagonalAttack(numbers){
+
+}
+
+diagonalAttack(['5 3 12 3 1',
+                '11 4 23 2 5',
+                '101 12 3 2110',
+                '1 4 5 2 2',
+                '5 22 33 11 1'])
