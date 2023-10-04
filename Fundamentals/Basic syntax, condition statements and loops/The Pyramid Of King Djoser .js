@@ -30,10 +30,10 @@ function pyramid(base, increment) {
     }
     let height = madeSteps * increment;
   
-    console.log(`Stone required: ${Math.round(stoneNeeded)}`);
-    console.log(`Marble required: ${Math.round(marbleNeeded)} `);
-    console.log(`Lapis Lazuli required: ${Math.round(lapisNeeded)}`);
-    console.log(`Gold required: ${Math.round(goldNeeded)}`);
+    console.log(`Stone required: ${Math.ceil(stoneNeeded)}`);
+    console.log(`Marble required: ${Math.ceil(marbleNeeded)} `);
+    console.log(`Lapis Lazuli required: ${Math.ceil(lapisNeeded)}`);
+    console.log(`Gold required: ${Math.ceil(goldNeeded)}`);
     console.log(`Final pyramid height: ${Math.floor(height)}`);
   }
   

@@ -14,4 +14,4 @@ function nonDec(numbers) {
   console.log(newArray.join(" "));
 }
 
-nonDec([ 20, 3, 2, 15, 6, 1]);
+nonDec([ 20, 3, 2, 21, 6, 1]);
