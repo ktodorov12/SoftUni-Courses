@@ -1,27 +1,20 @@
 function diagonalAttack(numbers) {
-  let leftNums = [];
-  let rigthNums = [];
-  let line = numbers.map(row => row.split(' ').map(Number));
-
-  for (let i = 0; i < numbers.length; i++) {
-    leftNums.push(Number(line[i][i]))
-  }
-  for (let i = 1; i <= numbers.length; i++) {
-    rigthNums.push(Number(line[i - 1][line.length - i]))
-  }
-
   let leftSum = 0;
   let rightSum = 0;
-  for (let i = 0; i < leftNums.length; i++) {
-    leftSum += leftNums[i];
-    rightSum += rigthNums[i];
+  let line = numbers.map((row) => row.split(" ").map(Number));
+
+  for (let i = 0; i < numbers.length; i++) {
+    leftSum += Number(line[i][i]);
   }
-  
+  for (let i = 1; i <= numbers.length; i++) {
+    rightSum += Number(line[i - 1][line.length - i]);
+  }
+
   if (leftSum === rightSum) {
     for (let j = 0; j < numbers.length; j++) {
       for (let i = 0; i < numbers.length; i++) {
         if (j != i && j != line.length - 1 - i) {
-          line[j][i] = leftSum
+          line[j][i] = leftSum;
         }
       }
     }
