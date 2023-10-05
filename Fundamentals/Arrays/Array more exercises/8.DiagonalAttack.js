@@ -1,51 +1,40 @@
 function diagonalAttack(numbers) {
   let leftNums = [];
   let rigthNums = [];
-  let leftCount = 0;
-  let rightCount = numbers.length - 1;
-  let passedMiddle = false;
-  //putting diagonals in array
+  let line = numbers.map(row => row.split(' ').map(Number));
+
   for (let i = 0; i < numbers.length; i++) {
-    let line = numbers[i].split(" ");
-    let mid = Math.floor(line.length / 2);
-
-    let first = Number(line[leftCount]);
-    let last = Number(line[rightCount]);
-    //to check if its before the middle
-    if (leftCount < mid && rightCount > mid && !passedMiddle) {
-      leftNums.push(first);
-      rigthNums.push(last);
-
-      leftCount++;
-      rightCount--;
-      if (leftCount === mid) {
-        passedMiddle = true;
-      }
-      //after passing the middle
-    } else if (leftCount >= 0 && rightCount <= line.length - 1) {
-      leftNums.push(last);
-      rigthNums.push(first);
-
-      leftCount--;
-      rightCount++;
-    }
+    leftNums.push(Number(line[i][i]))
   }
-  //filling in the sum
+  for (let i = 1; i <= numbers.length; i++) {
+    rigthNums.push(Number(line[i - 1][line.length - i]))
+  }
+
   let leftSum = 0;
   let rightSum = 0;
-
   for (let i = 0; i < leftNums.length; i++) {
     leftSum += leftNums[i];
     rightSum += rigthNums[i];
   }
-  // cheking if they are the same value
-  let sameValue = leftSum === rightSum;
-  if (sameValue) {
-    //if sums are not equal, printing the original matrix
+  
+  if (leftSum === rightSum) {
+    for (let j = 0; j < numbers.length; j++) {
+      for (let i = 0; i < numbers.length; i++) {
+        if (j != i && j != line.length - 1 - i) {
+          line[j][i] = leftSum
+        }
+      }
+    }
+    line.forEach((row) => console.log(row.join(" ")));
   } else {
-    numbers.join(" ").split(" ");
-    numbers.forEach((row) => console.log(row.split("").join('')));
+    line.forEach((row) => console.log(row.split("").join("")));
   }
 }
 
-diagonalAttack(["1 1 1", "1 1 1", "1 1 0"]);
+diagonalAttack([
+  "5 3 12 3 1",
+  "11 4 23 2 5",
+  "101 12 3 21 10",
+  "1 4 5 2 2",
+  "5 22 33 11 1",
+]);
