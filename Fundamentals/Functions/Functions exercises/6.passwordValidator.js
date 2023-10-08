@@ -57,3 +57,5 @@ function solve(password) {
     return true;
   }
 }
+
+solve("passWord")
