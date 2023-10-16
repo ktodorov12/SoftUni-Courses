@@ -1,9 +1,8 @@
 function gladiatorInventory(input) {
   let inventory = input[0].split(" ");
 
-
   for (let i = 1; i < input.length; i++) {
-    let [command, weapon] = input[i].split(" ");
+    let [command, weapon, upgrade] = input[i].split(" ");
 
     switch (command) {
       case "Buy":
@@ -28,11 +27,12 @@ function gladiatorInventory(input) {
         break;
 
       case "Upgrade":
-        weapon = weapon.slice(0, weapon.length - 1)
-        if (inventory.includes(weapon)) {
-          let [a,b, upgrade] = input[i].split(" ");
-          let indexWeapon = inventory.indexOf(weapon);
-          inventory.splice(indexWeapon + 1, 0, `${weapon}:${upgrade}`);
+        let item = weapon.split("-");
+        let newWep = item[0];
+        if (inventory.includes(newWep)) {
+          let indexWeapon = inventory.indexOf(newWep);
+          let up = `${newWep}:${upgrade}`;
+          inventory.splice(indexWeapon + 1, 0, up);
         }
         break;
     }
