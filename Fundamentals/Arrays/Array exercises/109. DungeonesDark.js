@@ -1,5 +1,5 @@
 function dungeon(rooms) {
-  let separate = rooms.join("").split("|");
+  let separate = rooms.shift().split("|");
   let health = 100;
   let coins = 0;
   let roomsPassed = 0;
