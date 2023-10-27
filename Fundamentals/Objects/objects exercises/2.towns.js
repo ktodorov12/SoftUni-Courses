@@ -6,8 +6,8 @@ function towns(info) {
     let long = Number(tokens[2]);
     return {
       town: town,
-      lat: lat.toFixed(2),
-      long: long.toFixed(2),
+      latitude: lat.toFixed(2),
+      longitude: long.toFixed(2),
     };
   });
 
