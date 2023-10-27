@@ -15,11 +15,10 @@ function songs(input) {
     return new Song(type, name, time);
   });
 
-  let fav = list.filter((i) => i.typeList === listType);
-
   if (listType === "all") {
     list.forEach((song) => console.log(song.name));
   } else {
+    let fav = list.filter((i) => i.typeList === listType);
     fav.forEach((song) => console.log(song.name));
   }
 }
