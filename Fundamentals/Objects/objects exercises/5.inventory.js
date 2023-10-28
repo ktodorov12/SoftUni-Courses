@@ -16,7 +16,7 @@ function inventory(info) {
   for (let hero of heroObject) {
     console.log(`Hero: ${hero.hero}`);
     console.log(`level => ${hero.level}`);
-    console.log(`Items => ${hero.items}`);
+    console.log(`items => ${hero.items}`);
   }
 }
 
