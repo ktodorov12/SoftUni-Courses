@@ -1,18 +1,23 @@
 function storeProvisions(stock, ordered) {
-  class Producs {
-    constructor(name, quantity) {
-      this.name = name;
-      this.quantity = quantity;
-    }
+  let available = [];
+
+  for (let i = 0; i < stock.length; i += 2) {
+    let product = stock[i];
+    available[product] = Number(stock[i + 1]);
   }
 
-  let av = stock.map((prods, val) => {
-    let prod = stock.unshift();
-    let smth = stock.unshift();
-    return new Producs(prod, smth);
-  });
+  for (let i = 0; i < ordered.length; i += 2) {
+    let product = ordered[i];
+    let find = available.hasOwnProperty(product);
 
-  console.log(av);
+    if (!find) {
+      available[product] = 0;
+    }
+    available[product] += Number(ordered[i + 1]);
+  }
+  for (let key in available){
+    console.log(`${key} -> ${available[key]}`);
+  }
 }
 
 storeProvisions(
