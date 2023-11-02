@@ -1,19 +1,20 @@
 function meetings(info) {
   let appointments = {};
 
-  for (let app of info) {
-    let [day, name] = app.split(" ");
+  info.forEach((apts) => {
+    let [day, name] = apts.split(" ");
 
     if (appointments.hasOwnProperty(day)) {
       console.log(`Conflict on ${day}!`);
-      continue;
+    } else {
+      appointments[day] = name;
+      console.log(`Scheduled for ${day}`);
     }
-    appointments[day] = name;
-    console.log(`Scheduled for ${day}`);
-  }
+  });
 
-  for (let [day, name] of Object.entries(appointments))
-    console.log(`${day} -> ${name}`);
+  Object.entries(appointments).forEach((entry) =>
+    console.log(entry.join(" -> "))
+  );
 }
 
 meetings(["Monday Peter", "Wednesday Bill", "Monday Tim", "Friday Tim"]);
