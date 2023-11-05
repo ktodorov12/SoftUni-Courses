@@ -1,6 +1,9 @@
 function partyTime(info) {
   let end = info.indexOf("PARTY");
-  let taken = info.slice(0, end).sort((a, b) => a.localeCompare(b));
+  let taken = info.slice(0, end);
+  let vip = taken.filter((x) => !isNaN(x[0]));
+  let reg = taken.filter((x) => isNaN(x[0]));
+  taken = vip.concat(reg);
   let removed = info.slice(end + 1);
 
   removed.forEach((element) => {
@@ -16,12 +19,12 @@ function partyTime(info) {
 
 partyTime([
   "7IK9Yo0h",
-  "9NoBUajQ",
+  "6NoBUajQ",
   "Ce8vwPmE",
   "SVQXQCbc",
   "tSzE5t0p",
   "PARTY",
-  "9NoBUajQ",
+  "6NoBUajQ",
   "Ce8vwPmE",
   "SVQXQCbc",
 ]);
