@@ -1,19 +1,23 @@
 function oddOccurance(info) {
-  let arr = Array.from(info.split(" "));
+  let arr = info.split(' ').map(el => el.toLowerCase());
   let obj = {};
-  let count = 0;
-  for (let word of arr) {
-    let acc = word.toLowerCase();
 
-    obj[acc] = count;
-    if (obj.hasOwnProperty(acc)) {
-      count = obj[acc];
-      count++;
+  for (let word of arr) {
+    if (obj.hasOwnProperty(word)) {
+      obj[word]++;
+    } else {
+      obj[word] = 1;
     }
-    count = 0;
   }
 
-  console.log(obj);
+  obj = Object.entries(obj).filter(([word, value]) => {
+    if (value % 2 !== 0){
+      return word
+    }
+  })
+  .map((el => el[0]))
+
+  console.log(obj.join(' '));
 }
 
 oddOccurance("Java C# Php PHP Java PhP 3 C# 3 1 5 C#");
