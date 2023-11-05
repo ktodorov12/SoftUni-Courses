@@ -4,18 +4,21 @@ function schoolGrades(info) {
   for (let current of info) {
     let [name, ...grades] = current.split(" ");
 
-    let num = grades.reduce((grd, currVal) => Number(grd) + Number(currVal), 0);
-
     if (students.hasOwnProperty(name)) {
-      num += grades.reduce((grd, currVal) => Number(grd) + Number(currVal), 0);
-      grades.push(num);
+      students[name] = students[name].concat(grades);
+    } else {
+      students[name] = grades;
     }
-
-    average = num / grades.length;
-    students[name] = average;
   }
 
-  console.log(students);
+  let entries = Object.entries(students);
+  let sorted = entries.sort((a,b) => a[0].localeCompare(b[0]))
+
+  for (let [name, grades] of sorted) {
+    let total = grades.reduce((x, y) => Number(x) + Number(y), 0);
+    let average = total / grades.length;
+    console.log(`${name}: ${average.toFixed(2)}`);
+  }
 }
 
 schoolGrades(["Lilly 4 6 6 5", "Tim 5 6", "Tammy 2 4 3", "Tim 6 6"]);
