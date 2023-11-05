@@ -1,18 +1,5 @@
 function cardGame(info) {
-  let powerOfCard = {
-    2: 2,
-    3: 3,
-    4: 4,
-    5: 5,
-    6: 6,
-    7: 7,
-    8: 8,
-    9: 9,
-    10: 10,
-    J: 11,
-    Q: 12,
-    K: 13,
-    A: 14,
+  let powerOfCard = { 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9, 10: 10, J: 11, Q: 12, K: 13, A: 14,
   };
   let typeOfCard = { S: 4, H: 3, D: 2, C: 1 };
 
@@ -28,8 +15,8 @@ function cardGame(info) {
     }
   }
 
-  for (let player in players) {
-    let cards = players[player];
+  for (let pl in players) {
+    let cards = players[pl];
     let value = 0;
     cards.forEach((card) => {
       let type = card.split("")[card.length - 1];
@@ -39,7 +26,7 @@ function cardGame(info) {
       type = typeOfCard[type];
       value += power * type;
     });
-    players[player] = value;
+    players[pl] = value;
   }
 
   Object.entries(players).forEach((x) => console.log(`${x[0]}: ${x[1]}`));
