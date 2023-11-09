@@ -1,0 +1,1 @@
+let printChars = (info) => info.split('').forEach(x => console.log(x))
