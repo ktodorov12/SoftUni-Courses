@@ -1,13 +1,11 @@
 function revealWords(word, sentence) {
   let words = word.split(", ");
 
-  let stars = words.map((word) => "*".repeat(word.length));
-
-  for (let i = 0; i < sentence.length; i++) {
-    if (sentence.includes(stars[i])) {
-      sentence = sentence.replace(stars[i], words[i]);
-    }
+  for (let word of words) {
+    let stars = "*".repeat(word.length);
+    sentence = sentence.replace(stars, word);
   }
+
   console.log(sentence);
 }
 
