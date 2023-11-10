@@ -5,7 +5,6 @@ function modernTimes(info) {
 
   hasHashTag.forEach((word) => {
     let string = word.substring(1);
-    string = string.split("");
     let onlyLet = true;
 
     for (let sr of string) {
@@ -15,7 +14,7 @@ function modernTimes(info) {
       }
     }
 
-    if (onlyLet) console.log(string.join(''));
+    if (onlyLet) console.log(string);
   });
 }
 
