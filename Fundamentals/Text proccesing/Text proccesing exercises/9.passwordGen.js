@@ -1,7 +1,5 @@
 function passwordGen(pass) {
-  let first = pass[0];
-  let second = pass[1];
-  let word = pass[2];
+  let [first, second, word] = pass;
 
   let concat = first.concat(second);
   let volews = "aeiou";
