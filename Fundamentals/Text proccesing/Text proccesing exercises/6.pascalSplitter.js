@@ -1,18 +1,19 @@
 function pascalSplitter(text) {
   let arrWords = [];
-  let currWord = "";
+  let capitalLetter = 0;
 
-  for (let letter of text) {
-    let code = letter.charCodeAt()
-    if (code >= 65 && code <= 90) {
-      arrWords.push(currWord);
-      currWord = "";
-      currWord += letter;
-    } else {
-      currWord += letter;
+  for (let i = 1; i < text.length; i++) {
+    let singleWord = "";
+
+    if (text[i].toUpperCase() === text[i]) {
+      singleWord = text.substring(capitalLetter, i);
+      arrWords.push(singleWord);
+      capitalLetter = i;
     }
   }
-  arrWords.shift()
+  let lastWord = text.substring(capitalLetter);
+  arrWords.push(lastWord);
+
   console.log(arrWords.join(', '));
 }
 
