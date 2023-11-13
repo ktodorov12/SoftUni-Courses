@@ -6,6 +6,7 @@ img {
     align-self: auto;
     max-width: 100%;
     height: auto;
+    background-color: aquamarine;
 }
 
 img:hover {
@@ -19,7 +20,8 @@ h1 {
     height: min-content;
 }
 
-p {
+.first {
+    border-inline:inherit;
     font-style:unset;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     font-size-adjust: inherit;
@@ -28,19 +30,17 @@ p {
 }
 
 .places {
-    color: rgb(100, 62, 189);
+    color: rgb(0, 0, 0);
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    text-indent: 0cqh;
 }
 
 li {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
-    list-style-type: lower-alpha;;
+    list-style-type:upper-roman;
+    align-self: auto;
 }
 
-#first {
-    z-index: auto;
-    color-scheme: red;
-    color: rgb(179, 113, 33);
-}
 
 h2:hover {
     box-shadow: 0 0 2px 1px rgba((0, 140, 186, 0.5))
@@ -48,4 +48,19 @@ h2:hover {
 
 h2 {
     text-align: center;
+}
+
+.second {
+    text-rendering: auto;
+    text-align: justify;
+    text-transform: inherit;
+    align-self: auto;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+body {
+    background-image: url("https://www.w3schools.com/css/img_mountains.jpg");
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    size-adjust:inherit;
 }
