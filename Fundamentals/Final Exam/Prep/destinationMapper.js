@@ -1,6 +1,6 @@
 function destinationMapper(info) {
-  let pattern = /([=\/])([A-Z][A-Za-z]{2,})\1/g
-  let valid = info.match(pattern);
+  let pattern = /([=\/])(([A-Z][A-Za-z]{2,}))\1/g
+  let valid = [...info.matchAll(pattern)];
 
   let totalPoints = 0;
 
@@ -8,9 +8,8 @@ function destinationMapper(info) {
 
   if (valid !== null) {
     for (let el of valid) {
-      el = el.split(/[=\/]/).join("");
-      totalPoints += el.length;
-      destinations.push(el)
+      totalPoints += el[2].length;
+      destinations.push(el[2])
     }
   }
 
