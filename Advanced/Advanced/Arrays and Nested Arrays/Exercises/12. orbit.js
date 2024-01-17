@@ -17,10 +17,9 @@ function solve(coordinates) {
   for (let i = 0; i < matrix.length; i++) {
     for (let j = 0; j < matrix.length; j++) {
       if (i == starX && starY == j) continue;
-      let num = 1;
+      let num = (j + i) - (starX - starY);
 
-      if (starY !== j) num += starY + j;
-      if (starX !== i) num += starX + i;
+
 
       matrix[i][j] = num;
     }
