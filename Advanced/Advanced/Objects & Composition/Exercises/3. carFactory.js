@@ -22,9 +22,9 @@ function carFactory(car) {
       type: car.carriage,
       color: car.color,
     },
-    wheels: [car.wheelsize, car.wheelsize, car.wheelsize, car.wheelsize],
+    wheels: [new Array(4).fill(car.wheelsize)],
   };
-
+  
   return objCar;
 }
 
