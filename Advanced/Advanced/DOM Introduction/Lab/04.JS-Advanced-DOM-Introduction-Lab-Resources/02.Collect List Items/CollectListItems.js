@@ -1,5 +1,5 @@
 function extractText() {
-  let list = document.getElementById("items").children;
+  let list = document.querySelectorAll("ul#items li");
   let result = "";
 
   for (let el of list) {
