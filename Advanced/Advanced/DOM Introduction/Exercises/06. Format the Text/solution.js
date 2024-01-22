@@ -5,9 +5,10 @@ function solve() {
 
   const text = input.split(".").filter((el) => el.length > 0);
 
+
   while (text.length > 0) {
     let elements = text.splice(0, 3);
-    output.innerHTML = `<p>${
+    output.innerHTML += `<p>${
       elements.join(". ") + "."
     }</p>`;
   }
