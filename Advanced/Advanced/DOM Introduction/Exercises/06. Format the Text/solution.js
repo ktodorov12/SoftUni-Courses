@@ -12,5 +12,4 @@ function solve() {
       elements.join(". ") + "."
     }</p>`;
   }
-  console.log(text);
 }
