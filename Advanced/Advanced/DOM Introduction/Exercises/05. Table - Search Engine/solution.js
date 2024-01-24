@@ -2,23 +2,20 @@ function solve() {
   document.querySelector("#searchBtn").addEventListener("click", onClick);
 
   function onClick() {
-    const table = document.getElementsByTagName("tbody")[0];
-    const children = Array.from(table.children);
+    const table = Array.from(document.querySelectorAll("tbody tr"));
     const search = document.getElementById("searchField").value;
 
-    children.forEach((tableRow) => tableRow.classList.remove("select"));
-
-    children.forEach((tableRow) => {
+    table.forEach((tableRow) => {
       let rowCells = Array.from(tableRow.children);
+      
+      for (let cell of rowCells){
+        let content = cell.textContent;
 
-      if (search) {
-        for (let cell of rowCells) {
-          cell = cell.textContent;
-
-          if (cell.includes(search)) {
-            tableRow.classList.add("select");
-            continue;
-          }
+        if (content.includes(search)) {
+          tableRow.classList.add("select");
+          break;
+        } else {
+          tableRow.classList.remove("select")
         }
       }
     });
