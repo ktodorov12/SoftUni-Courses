@@ -1,35 +1,38 @@
 function solve() {
   document.querySelector("#btnSend").addEventListener("click", onClick);
+
   const input = document.querySelector("div#inputs textarea");
-  let allRestaurants = {};
-  const outputRestaurant = document.getElementById("bestRestaurant");
-  const outputWorkers = document.getElementById("workers");
+  const outputRestaurant = document.querySelector("#bestRestaurant p");
+  const outputWorkers = document.querySelector("#workers p");
 
   function onClick() {
+    
+    let allRestaurants = {};
     const text = JSON.parse(input.value);
 
-    for (let information of text) {
-      const [restaurantName, data] = information.split(" - ");
-
+    text.forEach(information => {
+      const [nameRes, data] = information.split(" - ");
       const workerData = gettingWorkersData(data);
-      const sortedWorkingData = workerData.sort((a, b) => b.salary - a.salary);
-      const avgSalary = calculatingAverageSalary(sortedWorkingData);
-
-      if (!allRestaurants.hasOwnProperty(restaurants)) {
-        allRestaurants[restaurantName] = restaurants(
-          avgSalary,
-          sortedWorkingData
-        );
+  
+      if (!allRestaurants.hasOwnProperty(nameRes)) {
+        allRestaurants[nameRes] = restaurants(workerData);
+      } else {
+        let newWorkers = allRestaurants[nameRes].workersData.concat(workerData);
+        allRestaurants[nameRes] = restaurants(newWorkers);
       }
-    }
 
-    const bestRes = gettingBestRestaurant(allRestaurants);
+    });
 
-    bestRes.forEach(element => {
-      let [name, data] = element;
+    const [bestResName, bestResData] = gettingBestRestaurant(allRestaurants);
 
-      
-    })
+    let bestResWorkers = bestResData.workersData.reduce((result, el) => {
+      let { name, salary } = el;
+      result += `Name: ${name} With Salary: ${salary} `;
+      return result
+    }, "");
+
+    outputRestaurant.textContent = `Name: ${bestResName} Average Salary: ${bestResData.avgSalary.toFixed(2)} Best Salary: ${bestResData.bestSalary.toFixed(2)}`;
+    outputWorkers.textContent = bestResWorkers;
   }
 
   function gettingBestRestaurant(allRestaurants) {
@@ -39,17 +42,12 @@ function solve() {
   }
 
   function calculatingAverageSalary(workers) {
-    let total = 0;
-
-    workers.forEach((element) => {
-      total += element.salary;
-    });
-
-    return total / workers.length;
+    return workers.reduce((total, worker) => total + worker.salary, 0) / workers.length;
   }
 
   function gettingWorkersData(workerData) {
     let pairs = workerData.split(", ");
+
     const workers = [];
     for (let el of pairs) {
       let [workerName, salary] = el.split(" ");
@@ -60,14 +58,17 @@ function solve() {
     return workers;
   }
 
-  function restaurants(avgSalary, workers) {
+  function restaurants(workerData) {
+    const sortedWorkingData = workerData.sort((a, b) => b.salary - a.salary);
+    const avgSalary = calculatingAverageSalary(sortedWorkingData);
+  
     let state = {
       avgSalary,
-      bestSalary: workers[0].salary,
-      workersData: workers,
+      bestSalary: sortedWorkingData[0].salary,
+      workersData: sortedWorkingData,
     };
     return state;
   }
 }
 
-//["PizzaHut - Peter 500, George 300, Mark 800", "TheLake - Bob 1300, Joe 780, Jane 660"]
+//["PizzaHut - Peter 500, George 300, Mark 800", "PizzaHut - Bob 1300, Joe 780, Jane 660"]
