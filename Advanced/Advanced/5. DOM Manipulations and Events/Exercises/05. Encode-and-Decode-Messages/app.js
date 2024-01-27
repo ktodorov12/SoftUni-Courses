@@ -1,38 +1,26 @@
 function encodeAndDecodeMessages() {
-  const messageText = document.querySelector("#main div:nth-child(1)");
-  const senderTextarea = messageText.querySelector("textarea");
-  const button = messageText.querySelector("button");
+  const [encodeButton, decodeButton] = document.querySelectorAll("button");
+  const [encodeArea, decodeArea] = document.querySelectorAll("textarea");
 
-  const recieverRef = document.querySelector("#main div:nth-child(2)");
-  const recieverTextarea = recieverRef.querySelector("textarea");
-  const recieverButton = recieverRef.querySelector("button");
+  encodeButton.addEventListener("click", encode);
+  decodeButton.addEventListener("click", decode);
 
-  button.addEventListener("click", decodeMessage);
-  recieverButton.addEventListener("click", encodeMessage);
-
-  let encodedText = "";
-  let decodedText = "";
-
-  function decodeMessage() {
-    let text = senderTextarea.value;
-
-    for (let letter of text) {
-      let number = letter.charCodeAt();
-      let encodedLetter = String.fromCharCode(number + 1);
-      encodedText += encodedLetter;
+  function encode() {
+    let text = "";
+    let value = encodeArea.value;
+    for (let el of value) {
+      text += String.fromCharCode(el.charCodeAt() + 1);
     }
-    recieverTextarea.value = encodedText;
-    senderTextarea.value = "";
+    decodeArea.value = text;
+    encodeArea.value = "";
   }
 
-  function encodeMessage() {
-    for (let letter of encodedText) {
-      let number = letter.charCodeAt();
-      decodedText += String.fromCharCode(number - 1);
+  function decode() {
+    let text = "";
+    let value = decodeArea.value;
+    for (let el of value) {
+      text += String.fromCharCode(el.charCodeAt() - 1);
     }
-    recieverTextarea.value = "";
-    recieverTextarea.value = decodedText;
+    decodeArea.value = text;
   }
 }
-
-//The password for my bankaccount is 123password321
