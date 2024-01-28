@@ -1,28 +1,27 @@
 function create(words) {
   const content = document.getElementById("content");
 
+  const createPara = (textContent) => createElement("p", { textContent });
+  const createDiv = (content) => createElement("div", {}, content);
+
   words.forEach((text) => {
-    let div = createAndAppendDiv();
-    createAndAppendPara(div, text);
+    const p = createPara(text);
+    p.style.display = "none";
+    const div = createDiv(p);
+    content.appendChild(div);
+
+    div.addEventListener("click", show);
+
+    function show() {
+      p.style.display = "block";
+    }
   });
+}
 
-  function createAndAppendDiv() {
-    let newDiv = document.createElement("div");
-    newDiv.addEventListener("click", onClick);
-    content.appendChild(newDiv);
-    return newDiv;
-  }
+function createElement(type, attr, content) {
+  const element = document.createElement(type);
 
-  function createAndAppendPara(apendingDiv, text) {
-    let newPara = document.createElement("p");
-    newPara.style.display = "none";
-    newPara.textContent = text;
-    apendingDiv.appendChild(newPara);
+  if (attr) Object.assign(element, attr);
 
-   }
-
-   function onClick(event) {
-     event.currentTarget.children[0].style.display = "block";
-   }
-
+  return element;
 }
