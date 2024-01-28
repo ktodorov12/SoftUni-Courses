@@ -16,12 +16,12 @@ function create(words) {
       p.style.display = "block";
     }
   });
-}
-
-function createElement(type, attr, content) {
-  const element = document.createElement(type);
-
-  if (attr) Object.assign(element, attr);
-
-  return element;
+  
+  function createElement(type, attr, content) {
+    const element = document.createElement(type);
+  
+    if (attr) Object.assign(element, attr);
+    if (content !== undefined) element.appendChild(content)
+    return element;
+  }
 }
