@@ -1,33 +1,28 @@
 function filterEmployees(data, criteria) {
-  const parsedInput = JSON.parse(data);
-  let employees = [];
+  let parsedInput = JSON.parse(data);
+  let sequence = 0;
 
-  for (let employee of parsedInput) {
-    if (criteria === "all") {
-      employees.push(parsedInput);
-      break;
-    }
-
-    const [keyCriteria, valueCriteria] = criteria.split("-");
-
-    let valueEmployee = employee[keyCriteria];
-
-    if (
-      employee.hasOwnProperty(keyCriteria) &&
-      valueEmployee == valueCriteria
-    ) {
-      employees.push(employee);
-    }
-  }
-
-  function printResult() {
-    employees.forEach((employee, i) => {
-      let { first_name, last_name, email } = employee;
-
-      console.log(`${i}. ${first_name} ${last_name} - ${email}`);
+  if (criteria == "all") {
+    parsedInput.forEach((employee) => {
+      print(employee);
     });
+    return;
   }
-  printResult.call();
+
+  parsedInput.forEach((employee) => {
+    let [keyData, valueData] = criteria.split("-");
+
+    if (employee.hasOwnProperty(keyData) && employee[keyData] == valueData) {
+      print(employee);
+    }
+  });
+
+  function print(el) {
+    console.log(
+      `${sequence}. ${el["first_name"]} ${el["last_name"]} - ${el.email}`
+    );
+    sequence++;
+  }
 }
 
 filterEmployees(
