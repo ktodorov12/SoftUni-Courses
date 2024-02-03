@@ -21,14 +21,16 @@ function solution(command) {
       let balance = this.upvotes - this.downvotes;
       let percentage = (this.upvotes / totalVotes) * 100;
 
-      if (balance < 0) {
-        rating = "unpopular";
-      } else if (totalVotes < 10) {
+      if (totalVotes < 10) {
         rating = "new";
+      } else if (balance < 0) {
+        rating = "unpopular";
       } else if (percentage > 66) {
         rating = "hot";
-      } else if ((balance >= 0 && this.upvotes > 100) || this.downvotes > 100) {
+      } else if (balance >= 0 && totalVotes > 100) {
         rating = "controversial";
+      } else {
+        rating = "new";
       }
 
       return [totalUp, totalDown, balance, rating];
@@ -42,16 +44,9 @@ let post = {
   id: "2",
   author: "gosho",
   content: "wazaaaaa",
-  upvotes: 100,
-  downvotes: 100,
+  upvotes: 120,
+  downvotes: 30,
 };
 
-solution.call(post, "upvote");
-solution.call(post, "downvote");
-let score = solution.call(post, "score");
-console.log(score);
-for (let i = 0; i < 50; i++) {
-  solution.call(post, "downvote");
-}
-score = solution.call(post, "score");
-console.log(score);
+let answer = solution.call(post, "score");
+console.log(answer);
