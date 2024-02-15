@@ -5,23 +5,32 @@ describe("Pet Adoption Agency", function () {
   //
   describe("isPetAvailable function", () => {
     describe("Incorrect input types", () => {
-      let subst = petAdoptionAgency;
+      let subst;
+      this.beforeEach(() => {
+        subst = petAdoptionAgency;
+      });
 
       it("First parameter is not a string", () => {
         expect(() => subst.isPetAvailable(1, 1, true)).to.throw();
+        expect(() => subst.isPetAvailable([], 1, true)).to.throw();
       });
 
       it("Second parameter is not a number", () => {
         expect(() => subst.isPetAvailable("Dog", "dog", true)).to.throw();
+        expect(() => subst.isPetAvailable("Dog", [1], true)).to.throw();
       });
 
       it("Third parameter is not a boolean", () => {
         expect(() => subst.isPetAvailable("Dog", 1, "Dog")).to.throw();
+        expect(() => subst.isPetAvailable("Dog", 1, null)).to.throw();
       });
     });
 
     describe("Behaviour with correct input types", () => {
-      let subst = petAdoptionAgency;
+      let subst;
+      this.beforeEach(() => {
+        subst = petAdoptionAgency;
+      });
 
       it("When count is 0 or below", () => {
         expect(subst.isPetAvailable("dog", 0, true)).to.equal(
@@ -48,33 +57,41 @@ describe("Pet Adoption Agency", function () {
 
   describe("getRecommendedPets function", () => {
     describe("Incorrect input types", () => {
-      let subst = petAdoptionAgency;
+      let subst;
+      this.beforeEach(() => {
+        subst = petAdoptionAgency;
+      });
 
       it("First parameter is not an a array", () => {
         expect(() => subst.getRecommendedPets(1, "fast")).to.throw();
       });
 
       it("Second parameter is not a string", () => {
-        expect(() => subst.getRecommendedPets([], 1)).to.throw();
+        expect(() => subst.getRecommendedPets(["dog"], 1)).to.throw();
       });
     });
 
     describe("Behaviour when inputs are of the correct type", () => {
-      let subst = petAdoptionAgency;
-      let petObj = [
-        {
-          name: "Sharo",
-          traits: "fast",
-        },
-        {
-          name: "Masha",
-          traits: "Sleepy",
-        },
-      ];
+      let subst;
+      let petObj;
 
-      it("When the pets math the trait", () => {
+      this.beforeEach(function () {
+        subst = petAdoptionAgency;
+        petObj = [
+          {
+            name: "Sharo",
+            traits: "fast",
+          },
+          {
+            name: "Masha",
+            traits: "fast",
+          },
+        ];
+      });
+
+      it("When the pets mathc the trait", () => {
         expect(subst.getRecommendedPets(petObj, "fast")).to.equal(
-          "Recommended pets with the desired traits (fast): Sharo"
+          "Recommended pets with the desired traits (fast): Sharo, Masha"
         );
       });
 
