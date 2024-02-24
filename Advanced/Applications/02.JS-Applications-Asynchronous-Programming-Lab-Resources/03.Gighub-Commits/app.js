@@ -46,13 +46,14 @@ async function loadCommits() {
   try {
     const response = await fetch(url);
     if (!response.ok) {
-      throw new Error();
+      const message = await response.json();
+      throw message
     }
 
     const data = await response.json();
     commits.replaceChildren(...data.map(createLi));
   } catch (error) {
-    commits.textContent = error;
+    commits.textContent = error.message;
   }
 }
 
