@@ -1,27 +1,37 @@
 async function getRecipes() {
-    const response = await fetch('http://localhost:3030/jsonstore/cookbook/recipes');
+    const response = await fetch('http://localhost:3030/data/recipes');
     const recipes = await response.json();
 
-    return Object.values(recipes);
+    return recipes;
 }
 
 async function getRecipeById(id) {
-    const response = await fetch('http://localhost:3030/jsonstore/cookbook/details/' + id);
+    
+    const response = await fetch('http://localhost:3030/data/recipes/' + id);
     const recipe = await response.json();
 
     return recipe;
 }
 
 function createRecipePreview(recipe) {
-    const result = e('article', { className: 'preview', onClick: toggleCard },
+    
+    const result = e('article', { className: 'preview', onClick: () => toggleCard(recipe._id) },
         e('div', { className: 'title' }, e('h2', {}, recipe.name)),
         e('div', { className: 'small' }, e('img', { src: recipe.img })),
     );
 
     return result;
 
-    async function toggleCard() {
-        const fullRecipe = await getRecipeById(recipe._id);
+    async function toggleCard(id) {
+        
+        const fullRecipe = await getRecipeById(id);
+
+        const c = document.querySelector(".open")
+        if (c) {
+            c.classList.remove("open");
+            const recipe = await getRecipeById(c.dataset.id)
+            c.replaceWith(createRecipePreview(recipe));
+        }
 
         result.replaceWith(createRecipeCard(fullRecipe));
     }
@@ -43,17 +53,42 @@ function createRecipeCard(recipe) {
     ),
 );
 
+    result.dataset.id = recipe._id
+    result.classList.add("open")
     return result;
 }
 
-window.addEventListener('load', async () => {
+async function checkUser() {
+    const userData = sessionStorage.getItem("user");
+
+    if(userData) {
+        document.getElementById("logoutBtn").addEventListener("click", logout)
+        document.getElementById("user").style.display = "inline-block"
+    } else {
+        document.getElementById("guest").style.display = "inline-block";
+    }
+}
+
+function logout(e) {
+    e.preventDefault();
+    sessionStorage.removeItem("user");
+    window.location = "index.html"
+}
+
+window.addEventListener('load', async (ev) => {
+    ev.preventDefault();
+    checkUser();
+
     const main = document.querySelector('main');
 
     const recipes = await getRecipes();
     const cards = recipes.map(createRecipePreview);
 
     main.innerHTML = '';
-    cards.forEach(c => main.appendChild(c));
+    cards.forEach((c, ind) => {
+        c.dataset.recipeId = recipes[ind]._id
+        main.appendChild(c)
+    });
 });
 
 function e(type, attributes, ...content) {
