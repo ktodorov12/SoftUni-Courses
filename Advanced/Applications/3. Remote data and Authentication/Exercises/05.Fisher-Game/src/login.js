@@ -1,6 +1,6 @@
 const form = document.querySelector("form#login");
 const loginBtn = document.querySelector("#login button");
-const logoutBtn = document.getElementById("logout").style.display = "none"
+document.getElementById("user").style.display = "none";
 
 const logNavBtn = document.querySelector("#guest #login");
 logNavBtn.classList.add("active");

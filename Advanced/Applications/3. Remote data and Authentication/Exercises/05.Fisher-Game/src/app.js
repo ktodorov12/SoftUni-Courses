@@ -58,7 +58,7 @@ async function addCatch(e) {
 }
 
 async function onLoad(e) {
-  e?.preventDefault();
+  e.preventDefault();
   divCatches.innerHTML = "";
   try {
     const response = await fetch(url);
@@ -160,7 +160,6 @@ async function makeOption(method, url, token, body) {
       const err = await response.json()
       throw new Error(err.message)
     }
-    onLoad();
   } catch (error) {
     alert(error);
   }
