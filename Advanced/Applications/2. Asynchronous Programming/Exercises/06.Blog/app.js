@@ -5,11 +5,11 @@ function attachEvents() {
   const loadBtn = document.getElementById("btnLoadPosts");
   const viewPostBtn = document.getElementById("btnViewPost");
 
-  loadBtn.addEventListener("click", () => loadPosts(postUrl, commentUrl));
+  loadBtn.addEventListener("click", () => loadPosts(postUrl));
   viewPostBtn.addEventListener("click", () => viewPostInfo(commentUrl));
 }
 
-async function loadPosts(postUrl, commentUrl) {
+async function loadPosts(postUrl) {
   const response = await fetch(postUrl);
   const postData = await response.json();
 
@@ -62,6 +62,6 @@ function createOptions(postData) {
 function createComment(comment) {
   const li = document.createElement("li");
   li.id = comment.id;
-  li.textContent = comment.text;
+  li.textContent = comment.textContent;
   return li;
 }
