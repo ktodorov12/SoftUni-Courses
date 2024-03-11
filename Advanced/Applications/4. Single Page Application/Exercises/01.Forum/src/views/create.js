@@ -2,7 +2,7 @@ import { html, render } from "../lit.js";
 import { getTopics } from "../data/request.js";
 import { showView } from "../nav.js";
 
-const fragment = document.createDocumentFragment();
+const fragment = new DocumentFragment();
 const topics = await getTopics();
 
 const topicTemplate = (topic) => html` 
