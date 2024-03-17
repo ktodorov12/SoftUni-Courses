@@ -29,7 +29,8 @@ export async function request(method, url, data) {
       throw new Error(error.message);
     }
 
-    return response.json();
+    const dataRes = await response.json();
+    return dataRes
   } catch (error) {
     alert(error);
     throw new Error(error);

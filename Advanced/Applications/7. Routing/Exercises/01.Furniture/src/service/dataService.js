@@ -4,7 +4,7 @@ const BASE_URL = "http://localhost:3030/data/";
 const endpoints = {
   catalog: BASE_URL + "catalog",
   requests: (id) => BASE_URL + `catalog/${id}`,
-  myFurniture: (userId) => BASE_URL + `catalog?where=_ownerId%3D%22${userId}%22`,
+  myFurn: (userId) => BASE_URL + `catalog?where=_ownerId%3D%22${userId}%22`,
 };
 
 export async function createFurniture(data) {
@@ -28,5 +28,5 @@ export async function deleteFurniture(furnitureId) {
 }
 
 export async function myFurniture(userId) {
-    return get(endpoints.myFurniture(userId))
+    return await get(endpoints.myFurn(userId))
 }

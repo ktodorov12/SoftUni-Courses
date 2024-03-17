@@ -1,4 +1,4 @@
-import { post } from "../utility/requester.js";
+import { get, post } from "../utility/requester.js";
 import { clearUserData, getUserData, saveUserData } from "../utility/userHelper.js";
 
 const BASE_URL = "http://localhost:3030/users/";
@@ -19,15 +19,16 @@ export async function login(data) {
 }
 
 export async function logout() {
+  get(endpoints.logout);
   clearUserData();
 }
 
-export async function updateNav() {
+export function updateNav() {
   const userNav = document.getElementById("user");
   const guestNav = document.getElementById("guest");
-  const logedUser = await getUserData();
+  const logedUser = getUserData();
 
-  if(logedUser) {
+  if (logedUser) {
     userNav.style.display = "inline-block";
     guestNav.style.display = "none";
   } else {

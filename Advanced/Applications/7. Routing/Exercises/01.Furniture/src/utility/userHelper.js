@@ -1,23 +1,23 @@
-export async function getUserData() {
+export function getUserData() {
   return JSON.parse(sessionStorage.getItem("user"));
 }
 
-export async function saveUserData(data) {
+export function saveUserData(data) {
   sessionStorage.setItem("user", JSON.stringify(data));
 }
 
-export async function clearUserData() {
+export function clearUserData() {
   sessionStorage.removeItem("user");
 }
 
 export function getUserToken() {
   const userData = getUserData();
-  return userData.accessToken;
+  return userData?.accessToken;
 }
 
 export function getUserId() {
   const userData = getUserData();
-  return userData._id;
+  return userData?._id;
 }
 
 export function hasOwner(ownerId) {

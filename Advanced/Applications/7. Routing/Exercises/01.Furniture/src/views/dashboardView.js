@@ -1,4 +1,4 @@
-import { html, render } from "../utility/lid.js";
+import { html, render } from "../lib.js";
 import { getAllFurniture } from "../service/dataService.js";
 
 function dashboardTempalte(items) {

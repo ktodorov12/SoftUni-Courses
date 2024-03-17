@@ -4,7 +4,7 @@ const { expect } = require('chai');
 const host = 'http://localhost:3000'; // Application host (NOT service host - that can be anything)
 
 const interval = 300;
-const timeout = 6000;
+const timeout = 1000;
 const DEBUG = false;
 const slowMo = 500;
 

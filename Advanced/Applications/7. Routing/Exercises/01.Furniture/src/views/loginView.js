@@ -1,5 +1,5 @@
 import { login, updateNav } from "../service/userService.js";
-import { html, page, render } from "../utility/lid.js";
+import { html, page, render } from "../lib.js";
 import { createSubmitHandler } from "../utility/userHelper.js";
 
 function loginTemplate() {
