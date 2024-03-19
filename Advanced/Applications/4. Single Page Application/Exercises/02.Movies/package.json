@@ -8,20 +8,20 @@
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "lit-html": "^1.4.1",
-    "page": "^1.11.6"
-  },
   "devDependencies": {
     "chai": "4.3.4",
     "http-server": "0.12.3",
     "mocha": "8.3.2",
-    "playwright-chromium": "1.9.2"
+    "playwright-chromium": "1.42.0"
   },
   "directories": {
     "example": "example",
     "test": "tests"
   },
   "keywords": [],
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "lit-html": "^3.1.2",
+    "page": "^1.11.6"
+  }
 }
