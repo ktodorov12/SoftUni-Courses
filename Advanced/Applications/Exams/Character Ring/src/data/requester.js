@@ -1,6 +1,6 @@
 import { clearUserData, getUserToken } from "../util.js";
 
-const host = "hhtp://localhost:3030";
+const host = "http://localhost:3030";
 
 async function requester(method, url, data) {
   const options = {
@@ -15,7 +15,7 @@ async function requester(method, url, data) {
 
   const token = getUserToken();
   if (token) {
-    options.headers["X-Authorizatin"] = token;
+    options.headers["X-Authorization"] = token;
   }
 
   try {
