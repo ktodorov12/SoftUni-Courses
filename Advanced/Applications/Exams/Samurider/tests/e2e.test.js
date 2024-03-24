@@ -5,10 +5,10 @@ const { expect } = require('chai');
 const userApplicationHttpPort = "3000";
 
 const host = "http://localhost:" + userApplicationHttpPort; // Application host (NOT service host - that can be anything)
-const interval = 5000;
-const DEBUG = true;
+const interval = 200;
+const DEBUG = false;
 
-const slowMo = 5000;
+const slowMo = 1000;
 
 const mockData = {
     "users": [
