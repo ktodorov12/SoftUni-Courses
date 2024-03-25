@@ -2,16 +2,27 @@ import { register } from "../data/users.js";
 import { html, render, page } from "../lib.js";
 import { createSubmitHandler } from "../util.js";
 
-//TODO add html template
 function registerTemplate() {
-  return html``
+  return html`
+    <section id="register">
+      <div class="form">
+        <h2>Register</h2>
+        <form @submit=${createSubmitHandler(onRegister)} class="login-form">
+          <input type="text" name="email" id="register-email" placeholder="email" />
+          <input type="password" name="password" id="register-password" placeholder="password" />
+          <input type="password" name="re-password" id="repeat-password" placeholder="repeat password" />
+          <button type="submit">login</button>
+          <p class="message">Already registered? <a href="#">Login</a></p>
+        </form>
+      </div>
+    </section>
+  `;
 }
 
 export function showRegisterView() {
   render(registerTemplate());
 }
 
-//TODO check fields
 async function onRegister({ password, email, ["re-password"]: rePassword }) {
   if (!password || !email || !rePassword) {
     return alert("All field required");

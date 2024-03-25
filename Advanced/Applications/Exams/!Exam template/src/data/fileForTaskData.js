@@ -25,5 +25,5 @@ export async function edit(id, data) {
 }
 
 export async function deleteItem(id) {
-  await del(id);
+  await del(endpoints.request(id));
 }

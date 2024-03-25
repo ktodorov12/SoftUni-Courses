@@ -8,6 +8,7 @@ import { showLoginView } from "./views/loginView.js";
 import { showRegisterView } from "./views/registerView.js";
 import { showDetailsView } from "./views/detailsView.js";
 import { showEditView } from "./views/editView.js";
+import { showSearchView } from "./views/searchView.js";
 
 page("/", showHomeView);
 page("/register", showRegisterView);
@@ -16,6 +17,7 @@ page("/dashboard", showDashboardView);
 page("/details/:id", showDetailsView);
 page("/create", showCreateView);
 page("/edit/:id", showEditView);
+page("/search", showSearchView);
 
 
 page.start();
