@@ -1,3 +1,4 @@
+import { addingData } from "../data/fileForTaskData.js";
 import { html, render, page } from "../lib.js";
 import { createSubmitHandler } from "../util.js";
 
@@ -10,7 +11,13 @@ export function showCreateView() {
   render(templateForCreateForm());
 }
 
-//TODO add logic
-async function onCreate() {
+//TODO check logic
+async function onCreate(data) {
+  const check = Object.values(data).some((x) => x == "");
+  if (check) {
+    return alert("All fields requiered");
+  }
 
+  await addingData(data);
+  page.redirect("dashboard");
 }

@@ -1,3 +1,4 @@
+import { deleteItem } from "../data/fileForTaskData.js";
 import { html, render, page } from "../lib.js";
 import { getUserData, getUserId, isOwner } from "../util.js";
 
@@ -12,12 +13,12 @@ function detailsTemplate() {
 export async function showDetailsView(ctx) {
   const id = ctx.params.id;
 
-  //TODO add delete logic
+  //TODO check delete logic
   async function onDelete() {
-    // const isConfirmed = confirm("Are you sure?");
-    // if (isConfirmed) {
-    //   await !deleteFunction(id);
-    //   page.redirect("/dashboard");
-    // }
+    const isConfirmed = confirm("Are you sure?");
+    if (isConfirmed) {
+      await deleteItem(id);
+      page.redirect("/dashboard");
+    }
   }
 }
