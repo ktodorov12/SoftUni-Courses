@@ -12,9 +12,9 @@ export async function post(POST) {
 }
 
 export async function total(id) {
-  return await get(endpoints.totalLikes(id));
+  return await get(endpoints.total(id));
 }
 
 export async function hasUserLiked(id, userId) {
-  return await get(endpoints.userLiked(id, userId));
+  return await get(endpoints.isUser(id, userId));
 }
