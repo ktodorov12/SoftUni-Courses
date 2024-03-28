@@ -73,3 +73,12 @@ h2 {
     text-align: center;
     color: red
 }
+
+.user {
+    display: inline-block;
+    display: none;
+}
+
+.guest {
+    display: inline-block;
+}
