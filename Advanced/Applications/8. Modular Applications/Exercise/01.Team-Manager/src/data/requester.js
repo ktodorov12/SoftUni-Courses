@@ -36,9 +36,7 @@ async function requester(method, url, data) {
       return response.json();
     }
   } catch (error) {
-    //TODO if error is required
-    alert(error);
-    throw error;
+    throw new Error(error);
   }
 }
 

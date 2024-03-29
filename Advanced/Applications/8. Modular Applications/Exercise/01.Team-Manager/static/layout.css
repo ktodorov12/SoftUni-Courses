@@ -84,7 +84,7 @@ nav {
     height: 100%;
 }
 
-nav a {
+nav a{
     float: left;
     height: 100%;
     line-height: 32px;
@@ -155,4 +155,12 @@ article {
     text-align: center;
     width: 200px;
     font-size: 20px;
+}
+
+.user {
+    display: none;
+}
+
+.guest {
+    display: inline-block;
 }

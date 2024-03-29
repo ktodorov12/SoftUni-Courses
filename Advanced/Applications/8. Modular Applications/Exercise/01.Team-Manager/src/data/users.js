@@ -1,3 +1,4 @@
+import { render } from "../lib.js";
 import { clearUserData, getUserData, setUserData } from "../util.js";
 import { get, post } from "./requester.js";
 
@@ -32,3 +33,9 @@ export function updateNav() {
   document.querySelector(".user").style.display = userdata ? "inline-block" : "none";
   document.querySelector(".guest").style.display = userdata ? "none" : "inline-block";
 }
+
+
+export async function renderError(template, errorMessage) {
+  render(template({ message: errorMessage }));
+}
+
