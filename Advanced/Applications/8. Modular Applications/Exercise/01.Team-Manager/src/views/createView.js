@@ -45,8 +45,6 @@ async function onCreate(data) {
   try {
     const newTeam = await createTeam(data);
     const memberRequest = await requestToBeMember(newTeam._id);
-
-    memberRequest.status = "member";
     await approveMember(memberRequest._id, memberRequest);
 
     page.redirect(`/details/${newTeam._id}`);

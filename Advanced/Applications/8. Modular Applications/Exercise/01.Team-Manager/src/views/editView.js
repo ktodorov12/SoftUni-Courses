@@ -1,4 +1,4 @@
-import { edit } from "../data/teams.js";
+import { editTeam } from "../data/teams.js";
 import { html, render, page } from "../lib.js";
 import { createSubmitHandler } from "../util.js";
 
@@ -18,7 +18,7 @@ export async function showEditView(ctx) {
       return alert("All fields requiered");
     }
 
-    await edit(id, data);
+    await editTeam(id, data);
     page.redirect(`/details/${id}`);
   }
 }

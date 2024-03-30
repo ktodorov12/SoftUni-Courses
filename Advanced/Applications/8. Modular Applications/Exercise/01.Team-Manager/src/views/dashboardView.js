@@ -32,12 +32,10 @@ function cardTemplate(team) {
 }
 
 export async function showDashboardView() {
-  debugger
-  // const [allTeams, allMembers] = await Promise.all([
-  //   getAllTeams(),
-  //   getListOfMembers()
-  // ]);
-  const allTeams = await getAllTeams();
+  const [allTeams, allMembers] = await Promise.all([
+    getAllTeams(),
+    getListOfMembers()
+  ]);
   const teamsWithMembers = allTeams.map(team => {
     const corresponding = allMembers.filter(member => member.teamId == team._id);
     team.members = corresponding;
