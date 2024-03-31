@@ -1,4 +1,3 @@
-//TODO check all href links;
 import { logout, updateNav } from "./data/users.js";
 import { page } from "./lib.js";
 import { showCreateView } from "./views/createView.js";
@@ -21,9 +20,11 @@ page("/myTeams", showMyTeamView);
 
 
 page.start();
+page.redirect("/");
 updateNav();
 
-document.getElementById("logoutBtn").addEventListener("click", async () => {
+document.getElementById("logoutBtn").addEventListener("click", async (e) => {
+  e.preventDefault();
   await logout();
   page.redirect("/");
 });
