@@ -1,5 +1,6 @@
-import { approveMember, cancelMember, getDetailsTeam, getTeamMembers, requestToBeMember } from "../data/teams.js";
-import { html, render, page } from "../lib.js";
+import { deleteTeam, getDetailsTeam, getTeamMembers } from "../data/teams.js";
+import { approveMember, cancelMember, userQuitTeam, requestToBeMember, ownerRemoveUser, requestForPending } from "../data/teamRequester.js"
+import { html, page, render } from "../lib.js";
 import { getUserData, isOwner } from "../util.js";
 
 function detailsTemplate(team) {
@@ -15,12 +16,14 @@ function detailsTemplate(team) {
             ? html`
             <div>
               ${team.isOwner
-                ? html`<a href="/edit/${team._id}" class="action">Edit team</a>`
+                ? html`
+                  <a href="/edit/${team._id}" class="action">Edit team</a>
+                  <a href="javascript:void(0)" @click=${team.onDelete} class="action">Delete team</a>`
                 : team.isMember
-                  ? html`<a href="javascript:void(0)" @click=${cancelMember} class="action invert">Leave team</a>`
+                  ? html`<a href="javascript:void(0)" @click=${() => userQuitTeam(team, "members")} class="action invert">Leave team</a>`
                   : team.isPending
-                    ? html`Membership pending. <a href="/javascript:void(0)" @click=${cancelMember}>Cancel request</a>`
-                    : html`<a href="javascript:void(0)" @click=${requestToBeMember} class="action">Join team</a>`
+                    ? html`Membership pending. <a href="/javascript:void(0)" @click=${(e) => { e.preventDefault(); userQuitTeam(team, "pending") }}>Cancel request</a>`
+                    : html`<a href="javascript:void(0)" @click=${() => requestToBeMember(team._id)} class="action">Join team</a>`
               }
             </div>`
             : null}
@@ -35,9 +38,15 @@ function detailsTemplate(team) {
           ? html `
           <div class="pad-large">
             <h3>Membership Requests</h3>
-            <ul class="tm-members">
-              ${team.pending.map(pendingMembers)}
-            </ul>
+            ${team.pending.length > 0
+              ? html`
+                <ul class="tm-members">
+                  ${team.pending.map(pendingMembers)}
+                </ul>`
+              : html`
+                <p class="tm-members">
+                  No request yet.
+                </p>`}
           </div>`
           : null}
       </article>
@@ -53,7 +62,7 @@ function isUserMember (team, member) {
   ? html`<li>${userUsername}</li>`
   : html`<li>${memberUsername}
           ${team.isOwner 
-            ? html`<a href="javascript:void(0)" @click=${cancelMember} class="tm-control action">Remove from team</a>` 
+            ? html`<a href="javascript:void(0)" @click=${() => ownerRemoveUser(team, memberUsername)} class="tm-control action">Remove from team</a>` 
             : null}
           </li>`
 }
@@ -61,11 +70,12 @@ function isUserMember (team, member) {
 function pendingMembers(member) {
   return html`
   <li>${member.user.username}
-    <a href="javascript:void(0)" @click=${approveMember} class="tm-control action">Approve</a>
-    <a href="javascript:void(0)" @click=${cancelMember} class="tm-control action">Decline</a>
+    <a href="javascript:void(0)" @click=${requestForPending(approveMember, member)} class="tm-control action">Approve</a>
+    <a href="javascript:void(0)" @click=${requestForPending(cancelMember, member)} class="tm-control action">Decline</a>
   </li>
   `
 }
+
 
 export async function showDetailsView(ctx) {
   const id = ctx.params.id;
@@ -78,6 +88,10 @@ export async function showDetailsView(ctx) {
   teamDetails.isOwner = isOwner(teamDetails._ownerId);
   teamDetails.isPending = teamDetails.pending.some(m => m._ownerId == teamDetails.userData?._id);
   teamDetails.isMember = teamDetails.members.some(m => m._ownerId == teamDetails.userData?._id && teamDetails.isOwner == false);
+  teamDetails.onDelete = async function() {
+    await deleteTeam(id);
+    page.redirect("/dashboard");
+  }
 
   render(detailsTemplate(teamDetails));
 }
