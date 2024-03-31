@@ -1,6 +1,7 @@
-import { approveMember, createTeam, requestToBeMember } from "../data/teams.js";
+import { approveMember, requestToBeMember } from "../data/teamRequester.js";
+import { createTeam } from "../data/teams.js";
 import { renderError } from "../data/users.js";
-import { html, render, page } from "../lib.js";
+import { html, render } from "../lib.js";
 import { createSubmitHandler } from "../util.js";
 
 function templateForCreateForm(hasError) {
@@ -47,7 +48,6 @@ async function onCreate(data) {
     const memberRequest = await requestToBeMember(newTeam._id);
     await approveMember(memberRequest._id, memberRequest);
 
-    page.redirect(`/details/${newTeam._id}`);
   } catch (error) {
     renderError(templateForCreateForm, error.message);
   }

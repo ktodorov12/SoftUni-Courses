@@ -11,7 +11,8 @@ function dashboardTemplate(isLogged, allTeams) {
         ${allTeams.map(cardTemplate)}
       <article class="layout narrow">
         ${isLogged
-          ? html`<div class="pad-small"><a href="/create" class="action cta">Create Team</a></div>`
+          ? html`
+          <div class="pad-small"><a href="/create" class="action cta">Create Team</a></div>`
           : null}
       </article>
     </section>
