@@ -35,7 +35,7 @@ export function updateNav() {
 }
 
 
-export async function renderError(template, errorMessage) {
-  render(template({ message: errorMessage }));
+export async function renderError(template, errorMessage, data) {
+  render(template({ message: errorMessage }, data));
 }
 

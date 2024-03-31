@@ -4,11 +4,9 @@ const endpoints = {
   allData: "/data/teams",
   list: "/data/members?where=status%3D%22member%22",
   add: "/data/teams",
-  becomeMember: "/data/members",
   request: (id) => `/data/teams/${id}`,
-  myTeams: (userId) => `/data/members?where=_ownerId%3D%22${userId}%22%20AND%20status%3D%22member%22&load=team%3DteamId%3Ateam`,
-  teamMembers: (teamId) => `/data/members?where=teamId%3D%22${teamId}%22&load=user%3D_ownerId%3Ausers`,
-  membersRequest: (memberRequestId) => `/data/members/${memberRequestId}`,
+  myTeams: (userId) => `/data/members?where=_ownerId%3D%22${userId}%22%20AND%20status%3D%22member%22&load=team%3DteamId%3Ateams`,
+  teamMembers: (teamId) => `/data/members?where=teamId%3D%22${teamId}%22&load=user%3D_ownerId%3Ausers`
 };
 
 export async function getAllTeams() {
@@ -37,19 +35,6 @@ export async function deleteTeam(id) {
 
 export async function getMyTeams(userId) {
   return await get(endpoints.myTeams(userId));
-}
-
-export async function requestToBeMember(teamId) {
-  return await post(endpoints.becomeMember, { teamId });
-}
-
-export async function approveMember(memberRequestId, data) {
-  data.status = "member"
-  await put(endpoints.membersRequest(memberRequestId), data);
-}
-
-export async function cancelMember(id) {
-  await del(endpoints.membersRequest(id));
 }
 
 export async function getTeamMembers(teamId) {
