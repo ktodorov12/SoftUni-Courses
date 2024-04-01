@@ -3,6 +3,7 @@ import { createTeam } from "../data/teams.js";
 import { renderError } from "../data/users.js";
 import { html, render } from "../lib.js";
 import { createSubmitHandler } from "../util.js";
+import { showOverlay } from "./overlayView.js";
 
 function templateForCreateForm(hasError) {
   return html`
@@ -44,9 +45,15 @@ async function onCreate(data) {
   }
 
   try {
-    const newTeam = await createTeam(data);
-    const memberRequest = await requestToBeMember(newTeam._id);
-    await approveMember(memberRequest._id, memberRequest);
+    debugger
+    const userChoice = await showOverlay("Do you want to create this team?");
+    if (userChoice) {
+      const newTeam = await createTeam(data);
+      const memberRequest = await requestToBeMember(newTeam._id);
+      await approveMember(memberRequest._id, memberRequest);
+    } else {
+      renderError(templateForCreateForm, "Team creation was cancaled");
+    }
 
   } catch (error) {
     renderError(templateForCreateForm, error.message);
