@@ -4,6 +4,7 @@ const endpoints = {
   allData: "/data/teams",
   list: "/data/members?where=status%3D%22member%22",
   add: "/data/teams",
+  paginationData: (page) => `/data/teams?offset=${page}&pageSize=1`,
   request: (id) => `/data/teams/${id}`,
   myTeams: (userId) => `/data/members?where=_ownerId%3D%22${userId}%22%20AND%20status%3D%22member%22&load=team%3DteamId%3Ateams`,
   teamMembers: (teamId) => `/data/members?where=teamId%3D%22${teamId}%22&load=user%3D_ownerId%3Ausers`
@@ -39,4 +40,8 @@ export async function getMyTeams(userId) {
 
 export async function getTeamMembers(teamId) {
   return await get(endpoints.teamMembers(teamId));
+}
+
+export async function getTeamByPage(page) {
+  return await get(endpoints.paginationData(page));
 }
