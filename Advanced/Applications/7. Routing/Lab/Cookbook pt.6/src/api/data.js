@@ -9,6 +9,7 @@ const endpoints = {
     RECIPES: 'data/recipes',
     RECIPE_BY_ID: 'data/recipes/',
     COMMENTS: 'data/comments',
+    COMMENT_BY_ID: 'data/comments/',
     COMMENTS_BY_RECIPE_ID: 'data/comments?where=' + encodeURIComponent('recipeId='),
 };
 
@@ -16,11 +17,19 @@ export const login = api.login.bind(api);
 export const regster = api.register.bind(api);
 export const logout = api.logout.bind(api);
 
-export async function getRecipes(page = 1) {
-    return await api.get(endpoints.RECIPE_LIST + `&offset=${(page - 1) * 5}&pageSize=5`);
+export async function getRecipes(page = 1, search) {
+    let url = endpoints.RECIPE_LIST + `&offset=${(page - 1) * 5}&pageSize=5`;
+    if (search) {
+        url += '&where=' + encodeURIComponent(`name like "${search}"`);
+    }
+    return await api.get(url);
 }
 
-export async function getRecipeCount() {
+export async function getRecipeCount(search) {
+    let url = endpoints.RECIPE_COUNT;
+    if (search) {
+        url += '&where=' + encodeURIComponent(`name like "${search}"`);
+    }
     return await api.get(endpoints.RECIPE_COUNT);
 }
 
@@ -49,5 +58,6 @@ export async function getCommentsByRecipeId(recipeId) {
 }
 
 export async function createComment(comment) {
-    return await api.post(endpoints.COMMENTS, comment);
+    const result = await api.post(endpoints.COMMENTS, comment);
+    return await api.get(endpoints.COMMENT_BY_ID + result._id + '?load=' + encodeURIComponent('author=_ownerId:users'));
 }

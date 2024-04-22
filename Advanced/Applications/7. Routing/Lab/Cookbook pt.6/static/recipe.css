@@ -155,3 +155,7 @@ article h2 {
 .recent-title {
     padding: 8px 16px;
 }
+
+.card, .card:visited {
+    color: black;
+}

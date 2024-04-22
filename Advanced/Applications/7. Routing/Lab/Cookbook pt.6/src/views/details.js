@@ -3,17 +3,17 @@ import { getRecipeById, deleteRecipeById } from '../api/data.js';
 import { showComments } from './comments.js';
 
 
-const detailsTemplate = (recipe, isOwner, nav, onDelete) => html`
+const detailsTemplate = (recipe, isOwner, onDelete) => html`
 <section id="details">
-    ${recipeCard(recipe, isOwner, nav.goTo, onDelete)}
-    ${showComments(recipe, nav)}
+    ${recipeCard(recipe, isOwner, onDelete)}
+    ${showComments(recipe)}
 </section>`;
 
-const recipeCard = (recipe, isOwner, goTo, onDelete) => html`
+const recipeCard = (recipe, isOwner, onDelete) => html`
 <article>
     <h2>${recipe.name}</h2>
     <div class="band">
-        <div class="thumb"><img src=${recipe.img}></div>
+        <div class="thumb"><img src=${'/' + recipe.img}></div>
         <div class="ingredients">
             <h3>Ingredients:</h3>
             <ul>
@@ -28,31 +28,32 @@ const recipeCard = (recipe, isOwner, goTo, onDelete) => html`
     ${isOwner
         ? html`
     <div class="controls">
-        <button @click=${() => goTo('edit', recipe._id)}>\u270E Edit</button>
-        <button @click=${onDelete}>\u2716 Delete</button>
+        <a class="actionLink" href=${'/edit/' + recipe._id}>\u270E Edit</a>
+        <a class="actionLink" href="javascript:void(0)" @click=${onDelete}>\u2716 Delete</a>
     </div>`
         : ''}
 </article>`;
 
 
-export function setupDetails(nav) {
+export function setupDetails() {
     return showDetails;
 
-    async function showDetails(id) {
+    async function showDetails(context) {
+        const id = context.params.id;
         const recipe = await getRecipeById(id);
 
         const userId = sessionStorage.getItem('userId');
         const isOwner = userId != null && recipe._ownerId == userId;
 
-        return detailsTemplate(recipe, isOwner, nav, () => onDelete(recipe));
+        return detailsTemplate(recipe, isOwner, () => onDelete(recipe, () => context.page.redirect('/deleted/' + id)));
     }
 
-    async function onDelete(recipe) {
+    async function onDelete(recipe, onSuccess) {
         const confirmed = confirm(`Are you sure you want to delete ${recipe.name}?`);
         if (confirmed) {
             try {
                 await deleteRecipeById(recipe._id);
-                nav.goTo('deleted');
+                onSuccess();
             } catch (err) {
                 alert(err.message);
             }
