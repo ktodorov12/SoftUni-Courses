@@ -13,32 +13,55 @@ module.exports = async (req, res) => {
     const filePath = path.normalize(path.join(__dirname, "..", "views", "addCat.html"));
 
     const readStream = fs.createReadStream(filePath, { encoding: "utf-8" });
-
-    readStream.on("data", (chunk) => {
-      console.log(chunk);
-      res.write(chunk);
-    });
-
-    readStream.on("end", () => {
-      res.end();
-    });
+    readStream.pipe(res);
 
     readStream.on("error", (err) => {
-      console.log(err);
+      console.error(err);
+      throw new Error(err?.message);
     });
   } else if (pathname === "/cats/add-breed" && req.method === "GET") {
     const filePath = path.normalize(path.join(__dirname, "..", "views", "addBreed.html"));
 
     try {
       const data = await fsPromises.readFile(filePath, "utf-8");
-      console.log(data);
+      res.writeHead(200, { "Content-Type": "text/html" });
       res.write(data);
       res.end();
     } catch (err) {
-      console.error(err);
       res.writeHead(404, { "Content-Type": "text/plain" });
       res.end("404 Not Found");
     }
+  } else if (pathname === "/cats/add-breed" && req.method === "POST") {
+    const filePath = path.normalize(path.join(__dirname, "..", "data", "breeds.json"));
+    let data = "";
+
+    req.on("data", (chunk) => {
+      data += chunk.toString();
+    });
+
+    req.on("end", async () => {
+      try {
+        const breedsData = JSON.parse(await fsPromises.readFile(filePath, "utf-8"));
+        const formData = qs.parse(data);
+  
+        const newBreed = formData.breed.toString();
+        breedsData.push(newBreed);
+        const updatedBreeds = JSON.stringify(breedsData, null, 2);
+  
+        await fsPromises.writeFile(filePath, updatedBreeds);
+      } catch (error) {
+        console.log(err);
+        throw new Error(err?.message);
+      }
+    });
+
+    req.on("error", (err) => {
+      console.log(err);
+      throw new Error(err?.message);
+    });
+
+    res.writeHead(301, { location: "/" });
+    res.end();
   } else {
     return true;
   }
