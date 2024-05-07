@@ -1,19 +1,29 @@
 const fs = require("fs");
 const fsPromises = require("fs/promises");
+const { Transform } = require("stream");
 const path = require("path");
 const qs = require("querystring");
 const formidable = require("formidable");
 const breeds = require("../data/breeds.json");
 const cats = require("../data/cats.json");
+const breedTemplate = require("../views/templates/breedsTemplate")
 
 module.exports = async (req, res) => {
   const pathname = req.url;
 
   if (pathname === "/cats/add-cat" && req.method === "GET") {
+    const catBreedPlaceholder = breeds.map(breedTemplate);
     const filePath = path.normalize(path.join(__dirname, "..", "views", "addCat.html"));
 
     const readStream = fs.createReadStream(filePath, { encoding: "utf-8" });
-    readStream.pipe(res);
+    const transformStream = new Transform({
+      transform(chunk, encoding, callback){
+        const modifiedChunk = chunk.toString().replace("{{catBreeds}}", catBreedPlaceholder);
+        this.push(modifiedChunk);
+        callback();
+      }
+    });
+    readStream.pipe(transformStream).pipe(res);
 
     readStream.on("error", (err) => {
       console.error(err);
@@ -43,11 +53,11 @@ module.exports = async (req, res) => {
       try {
         const breedsData = JSON.parse(await fsPromises.readFile(filePath, "utf-8"));
         const formData = qs.parse(data);
-  
+
         const newBreed = formData.breed.toString();
         breedsData.push(newBreed);
         const updatedBreeds = JSON.stringify(breedsData, null, 2);
-  
+
         await fsPromises.writeFile(filePath, updatedBreeds);
       } catch (error) {
         console.log(err);
