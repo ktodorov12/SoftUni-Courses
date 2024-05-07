@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const cats = require("../data/cats.json");
+const template = require("../views/templates/catsTemplate");
 
 module.exports = (req, res) => {
   const pathname = req.url;
@@ -19,11 +20,14 @@ module.exports = (req, res) => {
         return;
       }
 
+      const catPlaceholder = cats.map(template);
+      const modifiedData = data.toString().replace("{{allCatsData}}", catPlaceholder);
+
       res.writeHead(200, {
         "Content-Type": "text/html",
       });
 
-      res.write(data);
+      res.write(modifiedData);
       res.end();
     });
   } else {
