@@ -6,7 +6,8 @@ const qs = require("querystring");
 const formidable = require("formidable");
 const breeds = require("../data/breeds.json");
 const cats = require("../data/cats.json");
-const breedTemplate = require("../views/templates/breedsTemplate")
+const breedTemplate = require("../views/templates/breedsTemplate");
+const { IncomingMessage } = require("http");
 
 module.exports = async (req, res) => {
   const pathname = req.url;
@@ -17,11 +18,11 @@ module.exports = async (req, res) => {
 
     const readStream = fs.createReadStream(filePath, { encoding: "utf-8" });
     const transformStream = new Transform({
-      transform(chunk, encoding, callback){
+      transform(chunk, encoding, callback) {
         const modifiedChunk = chunk.toString().replace("{{catBreeds}}", catBreedPlaceholder);
         this.push(modifiedChunk);
         callback();
-      }
+      },
     });
     readStream.pipe(transformStream).pipe(res);
 
@@ -29,6 +30,30 @@ module.exports = async (req, res) => {
       console.error(err);
       throw new Error(err?.message);
     });
+  } else if (pathname === "/cats/add-cat" && req.method === "POST") {
+
+    try {
+      const form = new formidable.IncomingForm();
+      const [fields, files] = await form.parse(req);
+
+      const catData = {
+        name: fields.name[0],
+        description: fields.description[0],
+        breed: fields.breed[0]
+      }
+
+      form.on("fileBegin", (string, file) => {
+        console.log(string, file);
+      })
+
+      console.log(files);
+    } catch (error) {
+      console.error(error);
+      throw new Error(error?.message);
+    }
+
+    res.writeHead(301, {location: "/"});
+    res.end();
   } else if (pathname === "/cats/add-breed" && req.method === "GET") {
     const filePath = path.normalize(path.join(__dirname, "..", "views", "addBreed.html"));
 
