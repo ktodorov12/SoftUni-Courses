@@ -27,7 +27,7 @@ module.exports = (req, res) => {
   if (pathname.startsWith("/content") && req.method === "GET") {
     const filePath = path.normalize(path.join(__dirname, "..", pathname));
 
-    fs.readFile(filePath, "utf-8", (err, data) => {
+    fs.readFile(filePath, (err, data) => {
       if (err) {
         res.writeHead(404, { "Content-Type": "text/plain" });
         res.end("404 not found");
