@@ -31,35 +31,74 @@ module.exports = async (req, res) => {
       throw new Error(err?.message);
     });
   } else if (pathname === "/cats/add-cat" && req.method === "POST") {
-
     ////Formidable Prommise approach/////
-    try {
-      const form = new formidable.IncomingForm();
-      const [fields, files] = await form.parse(req);
+    // try {
+    //   const form = new formidable.IncomingForm();
+    //   const [fields, files] = await form.parse(req);
 
-      const catImageData = files.upload[0];
-      const imagePath = path.join(__dirname, "../content/images", catImageData.originalFilename);
-      await fsPromises.writeFile(imagePath, await fsPromises.readFile(catImageData.filepath));
-      
-      const catPath = path.join(__dirname, "../data/cats.json");
-      const allCatData = JSON.parse(await fsPromises.readFile(catPath));
+    //   const catImageData = files.upload[0];
+    //   const imagePath = path.join(__dirname, "../content/images", catImageData.originalFilename);
+    //   await fsPromises.writeFile(imagePath, await fsPromises.readFile(catImageData.filepath));
 
-      const catData = {
-        id: allCatData[allCatData.length - 1].id + 1,
-        name: fields.name[0],
-        description: fields.description[0],
-        breed: fields.breed[0],
-        imageUrl: `/content/images/${catImageData.originalFilename}`
-      };
-      allCatData.push(catData);
-      await fsPromises.writeFile(catPath, JSON.stringify(allCatData, null, 2))
+    //   const catPath = path.join(__dirname, "../data/cats.json");
+    //   const allCatData = JSON.parse(await fsPromises.readFile(catPath));
 
-    } catch (error) {
-      console.error(error);
-      throw new Error(error?.message);
-    }
+    //   const catData = {
+    //     id: allCatData[allCatData.length - 1].id + 1,
+    //     name: fields.name[0],
+    //     description: fields.description[0],
+    //     breed: fields.breed[0],
+    //     imageUrl: `/content/images/${catImageData.originalFilename}`
+    //   };
+    //   allCatData.push(catData);
+    //   await fsPromises.writeFile(catPath, JSON.stringify(allCatData, null, 2))
 
-    res.writeHead(301, {location: "/"});
+    // } catch (error) {
+    //   console.error(error);
+    //   throw new Error(error?.message);
+    // }
+
+    ////Formidable Event approach////
+    const form = new formidable.IncomingForm();
+
+    const fields = {};
+    const files = {};
+
+    form
+      .on("field", (fieldName, value) => {
+        fields[fieldName] = value;
+      })
+      .on("file", (fieldName, file) => {
+        files[fieldName] = file;
+      })
+      .on("end", async () => {
+        console.log(files);
+        console.log(fields);
+
+        const catImageData = files.upload;
+        const imagePath = path.join(__dirname, "../content/images", catImageData.originalFilename);
+        await fsPromises.writeFile(imagePath, await fsPromises.readFile(catImageData.filepath));
+
+        const catPath = path.join(__dirname, "../data/cats.json");
+        const allCatData = JSON.parse(await fsPromises.readFile(catPath));
+        const catData = {
+          id: allCatData[allCatData.length - 1].id + 1 || 1,
+          name: fields.name,
+          description: fields.description,
+          breed: fields.breed,
+        };
+
+        allCatData.push(catData);
+        await fsPromises.writeFile(catPath, JSON.stringify(allCatData, null, 2));
+      })
+      .on("error", (err) => {
+        console.log(err);
+        throw new Error(err);
+      });
+
+    await form.parse(req);
+
+    res.writeHead(301, { location: "/" });
     res.end();
   } else if (pathname === "/cats/add-breed" && req.method === "GET") {
     const filePath = path.normalize(path.join(__dirname, "..", "views", "addBreed.html"));
