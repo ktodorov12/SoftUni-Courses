@@ -32,21 +32,28 @@ module.exports = async (req, res) => {
     });
   } else if (pathname === "/cats/add-cat" && req.method === "POST") {
 
+    ////Formidable Prommise approach/////
     try {
       const form = new formidable.IncomingForm();
       const [fields, files] = await form.parse(req);
 
+      const catImageData = files.upload[0];
+      const imagePath = path.join(__dirname, "../content/images", catImageData.originalFilename);
+      await fsPromises.writeFile(imagePath, await fsPromises.readFile(catImageData.filepath));
+      
+      const catPath = path.join(__dirname, "../data/cats.json");
+      const allCatData = JSON.parse(await fsPromises.readFile(catPath));
+
       const catData = {
+        id: allCatData[allCatData.length - 1].id + 1,
         name: fields.name[0],
         description: fields.description[0],
-        breed: fields.breed[0]
-      }
+        breed: fields.breed[0],
+        imageUrl: `/content/images/${catImageData.originalFilename}`
+      };
+      allCatData.push(catData);
+      await fsPromises.writeFile(catPath, JSON.stringify(allCatData, null, 2))
 
-      form.on("fileBegin", (string, file) => {
-        console.log(string, file);
-      })
-
-      console.log(files);
     } catch (error) {
       console.error(error);
       throw new Error(error?.message);
