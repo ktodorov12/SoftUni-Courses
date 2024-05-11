@@ -9,7 +9,7 @@ const catFindNewHomeTemp = (cat) => {
         <textarea id="description" disabled>${cat.description}</textarea>
         <label for="group">Breed</label>
         <select id="group" disabled>
-            <option value="${cat.breed}">Fluffy Cat</option>
+            <option value="${cat.breed}">${cat.breed}</option>
         </select>
         <button>SHELTER THE CAT</button>
     </form>`;
