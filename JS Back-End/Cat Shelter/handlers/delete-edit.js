@@ -2,23 +2,24 @@ const fs = require("fs");
 const fsPromises = require("fs/promises");
 const path = require("path");
 const qs = require("querystring");
-const formTemplate = require("../views/templates/newHomeTemp.js");
+const deleteFormTemplate = require("../views/templates/newHomeTemp.js");
+const editFormTempalte = require("../views/templates/editCatTemp.js");
 
 module.exports = async (req, res) => {
   const [pathname, catId] = req.url.split("?");
-  const filePath = path.join(__dirname, "../views", "catShelter.html");
+  const catShelpterPath = path.join(__dirname, "../views", "catShelter.html");
+  const editCatPath = path.join(__dirname, "../views", "editCat.html");
   const catsPath = path.join(__dirname, "../data", "cats.json");
 
   try {
     if (pathname === "/cats-find-new-home" && req.method === "GET") {
       const { foundCat } = await findNeededCat();
 
-      const formView = formTemplate(foundCat);
-      const shelterView = await fsPromises.readFile(filePath, { encoding: "utf-8" });
+      const formView = deleteFormTemplate(foundCat);
+      const shelterView = await fsPromises.readFile(catShelpterPath, { encoding: "utf-8" });
 
       res.writeHead(200, { "Content-Type": "text/html" });
       res.write(shelterView.toString().replace("{{catForm}}", formView));
-
       res.end();
     } else if (pathname === "/cats-find-new-home" && req.method === "POST") {
       const { allCatData, foundCat } = await findNeededCat();
@@ -28,7 +29,15 @@ module.exports = async (req, res) => {
       await fsPromises.writeFile(catsPath, JSON.stringify(allCatData, null, 2));
 
       res.writeHead(301, { location: "/" });
+      res.end();
+    } else if (pathname === "/edit-cat" && req.method === "GET") {
+      const { foundCat } = await findNeededCat();
 
+      const formView = editFormTempalte(foundCat);
+      const editPage = await fsPromises.readFile(editCatPath, { encoding: "utf-8" });
+
+      res.writeHead(200, { "Content-Type": "text/html" });
+      res.write(editPage.toString().replace("{{editCat}}", formView));
       res.end();
     } else {
       return true;
@@ -36,7 +45,7 @@ module.exports = async (req, res) => {
   } catch (err) {
     handleError(err);
   }
-  
+
   async function findNeededCat() {
     try {
       const allCatData = JSON.parse(await fsPromises.readFile(catsPath, { encoding: "utf-8" }));
