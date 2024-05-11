@@ -6,7 +6,7 @@ const catTemplate = (cat) => {
       <p><span>Description: </span>${cat.description}</p>
       <ul class="buttons">
           <li class="btn edit"><a href="">Change Info</a></li>
-          <li class="btn delete"><a href="">New Home</a></li>
+          <li class="btn delete"><a href="/cats-find-new-home?${cat.id}">New Home</a></li>
       </ul>
     </li>`;
 };
