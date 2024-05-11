@@ -9,8 +9,8 @@ module.exports = async (req, res) => {
   const filePath = path.join(__dirname, "../views", "catShelter.html");
   const catsPath = path.join(__dirname, "../data", "cats.json");
 
-  if (pathname === "/cats-find-new-home" && req.method === "GET") {
-    try {
+  try {
+    if (pathname === "/cats-find-new-home" && req.method === "GET") {
       const { foundCat } = await findNeededCat();
 
       const formView = formTemplate(foundCat);
@@ -18,16 +18,9 @@ module.exports = async (req, res) => {
 
       res.writeHead(200, { "Content-Type": "text/html" });
       res.write(shelterView.toString().replace("{{catForm}}", formView));
-    } catch (err) {
-      res.writeHead(500, { "Content-Type": "text/plain" });
-      res.end("500 Internal Server Error");
-      console.error(err); // Log the error for debugging purposes
-      return;
-    }
 
-    res.end();
-  } else if (pathname === "/cats-find-new-home" && req.method === "POST") {
-    try {
+      res.end();
+    } else if (pathname === "/cats-find-new-home" && req.method === "POST") {
       const { allCatData, foundCat } = await findNeededCat();
 
       const index = allCatData.indexOf(foundCat);
@@ -35,18 +28,15 @@ module.exports = async (req, res) => {
       await fsPromises.writeFile(catsPath, JSON.stringify(allCatData, null, 2));
 
       res.writeHead(301, { location: "/" });
-    } catch (err) {
-      res.writeHead(500, { "Content-Type": "text/plain" });
-      res.end("500 Internal Server Error");
-      console.error(err); // Log the error for debugging purposes
-      return;
+
+      res.end();
+    } else {
+      return true;
     }
-
-    res.end();
-  } else {
-    return true;
+  } catch (err) {
+    handleError(err);
   }
-
+  
   async function findNeededCat() {
     try {
       const allCatData = JSON.parse(await fsPromises.readFile(catsPath, { encoding: "utf-8" }));
@@ -65,5 +55,22 @@ module.exports = async (req, res) => {
       console.error(err); // Log the error for debugging purposes
       return;
     }
+  }
+
+  function handleError(err, res) {
+    console.log(err);
+    let statusCode = 500;
+    let errorMessage = "Internal Server Error";
+
+    if (err instanceof SyntaxError || err.code === "ENOENT") {
+      statusCode = 404;
+      errorMessage = "Resource not found";
+    } else if (err instanceof TypeError) {
+      statusCode = 400;
+      errorMessage = "Bad request";
+    }
+
+    res.writeHead(statusCode, { "Content-Type": "text/plain" });
+    res.end(errorMessage);
   }
 };
