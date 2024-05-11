@@ -1,6 +1,6 @@
 const catFindNewHomeTemp = (cat) => {
   return `        
-    <form action="/cats-find-new-home?${cat.id}" method="POST" class="cat-form">
+    <form action="/cats-find-new-home/${cat.id}" method="POST" class="cat-form">
         <h2>Shelter the cat</h2>
         <img src="${cat.imageUrl}" alt="">
         <label for="name">Name</label>

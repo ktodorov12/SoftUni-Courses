@@ -2,17 +2,19 @@ const fs = require("fs");
 const fsPromises = require("fs/promises");
 const path = require("path");
 const qs = require("querystring");
+const formidable = require("formidable");
 const deleteFormTemplate = require("../views/templates/newHomeTemp.js");
 const editFormTempalte = require("../views/templates/editCatTemp.js");
 
 module.exports = async (req, res) => {
-  const [pathname, catId] = req.url.split("?");
+  const pathname = req.url;
+  const catId = pathname.substring(pathname.lastIndexOf("/") + 1)
   const catShelpterPath = path.join(__dirname, "../views", "catShelter.html");
   const editCatPath = path.join(__dirname, "../views", "editCat.html");
   const catsPath = path.join(__dirname, "../data", "cats.json");
 
   try {
-    if (pathname === "/cats-find-new-home" && req.method === "GET") {
+    if (pathname === `/cats-find-new-home/${catId}` && req.method === "GET") {
       const { foundCat } = await findNeededCat();
 
       const formView = deleteFormTemplate(foundCat);
@@ -21,16 +23,17 @@ module.exports = async (req, res) => {
       res.writeHead(200, { "Content-Type": "text/html" });
       res.write(shelterView.toString().replace("{{catForm}}", formView));
       res.end();
-    } else if (pathname === "/cats-find-new-home" && req.method === "POST") {
+    } else if (pathname === `/cats-find-new-home/${catId}` && req.method === "POST") {
       const { allCatData, foundCat } = await findNeededCat();
 
+      await fsPromises.unlink(path.join(__dirname, "..", foundCat.imageUrl));
       const index = allCatData.indexOf(foundCat);
       allCatData.splice(index, 1);
       await fsPromises.writeFile(catsPath, JSON.stringify(allCatData, null, 2));
 
       res.writeHead(301, { location: "/" });
       res.end();
-    } else if (pathname === "/edit-cat" && req.method === "GET") {
+    } else if (pathname === `/edit-cat/${catId}` && req.method === "GET") {
       const { foundCat } = await findNeededCat();
 
       const formView = editFormTempalte(foundCat);
