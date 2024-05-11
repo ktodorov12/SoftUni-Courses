@@ -8,7 +8,7 @@ const editFormTempalte = require("../views/templates/editCatTemp.js");
 
 module.exports = async (req, res) => {
   const pathname = req.url;
-  const catId = pathname.substring(pathname.lastIndexOf("/") + 1)
+  const catId = pathname.substring(pathname.lastIndexOf("/") + 1);
   const catShelpterPath = path.join(__dirname, "../views", "catShelter.html");
   const editCatPath = path.join(__dirname, "../views", "editCat.html");
   const catsPath = path.join(__dirname, "../data", "cats.json");
@@ -42,6 +42,28 @@ module.exports = async (req, res) => {
       res.writeHead(200, { "Content-Type": "text/html" });
       res.write(editPage.toString().replace("{{editCat}}", formView));
       res.end();
+    } else if (req.url === `/edit-cat/${catId}` && req.method === "POST") {
+      const { allCatData, foundCat } = await findNeededCat();
+
+      const form = new formidable.IncomingForm();
+      const [fields, files] = await form.parse(req);
+
+      allCatData.splice(allCatData.indexOf(foundCat), 1);
+      const catPhoto = files.image[0];
+      const urlPath = `/content/images/${catPhoto.originalFilename}`;
+      const editedCatData = {
+        name: fields.name[0],
+        description: fields.description[0],
+        group: fields.group[0],
+        imageUrl: urlPath,
+      };
+      allCatData.push(editedCatData);
+
+      await fsPromises.writeFile(path.join(__dirname, "..", urlPath), await fsPromises.readFile(catPhoto.filepath));
+      await fsPromises.writeFile(catsPath, JSON.stringify(allCatData, null, 2));
+
+      res.writeHead(301, { location: "/" });
+      res.end();
     } else {
       return true;
     }
@@ -69,7 +91,7 @@ module.exports = async (req, res) => {
     }
   }
 
-  function handleError(err, res) {
+  function handleError(err) {
     console.log(err);
     let statusCode = 500;
     let errorMessage = "Internal Server Error";
