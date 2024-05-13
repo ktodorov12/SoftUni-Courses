@@ -31,7 +31,7 @@ module.exports = async (req, res) => {
       throw new Error(err?.message);
     });
   } else if (pathname === "/cats/add-cat" && req.method === "POST") {
-    ////Formidable Prommise approach/////
+    ////////Formidable Prommise approach/////////
     // try {
     //   const form = new formidable.IncomingForm();
     //   const [fields, files] = await form.parse(req);
@@ -44,7 +44,7 @@ module.exports = async (req, res) => {
     //   const allCatData = JSON.parse(await fsPromises.readFile(catPath));
 
     //   const catData = {
-    //     id: allCatData[allCatData.length - 1].id + 1,
+    //     id: allCatData[allCatData.length - 1].id + 1 || 1,
     //     name: fields.name[0],
     //     description: fields.description[0],
     //     breed: fields.breed[0],
@@ -58,7 +58,7 @@ module.exports = async (req, res) => {
     //   throw new Error(error?.message);
     // }
 
-    ////Formidable Event approach////
+    ////////Formidable Event approach////////
     const form = new formidable.IncomingForm();
 
     const fields = {};
@@ -86,6 +86,7 @@ module.exports = async (req, res) => {
           name: fields.name,
           description: fields.description,
           breed: fields.breed,
+          imageUrl: `/content/images/${catImageData.originalFilename}`
         };
 
         allCatData.push(catData);
@@ -98,7 +99,9 @@ module.exports = async (req, res) => {
 
     await form.parse(req);
 
-    res.writeHead(301, { location: "/" });
+    ////////Pure Node.js approach////////
+
+    res.writeHead(302, { location: "/" });
     res.end();
   } else if (pathname === "/cats/add-breed" && req.method === "GET") {
     const filePath = path.normalize(path.join(__dirname, "..", "views", "addBreed.html"));
@@ -141,7 +144,7 @@ module.exports = async (req, res) => {
       throw new Error(err?.message);
     });
 
-    res.writeHead(301, { location: "/" });
+    res.writeHead(302, { location: "/" });
     res.end();
   } else {
     return true;

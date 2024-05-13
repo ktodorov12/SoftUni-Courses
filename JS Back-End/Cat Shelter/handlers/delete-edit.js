@@ -31,7 +31,7 @@ module.exports = async (req, res) => {
       allCatData.splice(index, 1);
       await fsPromises.writeFile(catsPath, JSON.stringify(allCatData, null, 2));
 
-      res.writeHead(301, { location: "/" });
+      res.writeHead(302, { location: "/" });
       res.end();
     } else if (pathname === `/edit-cat/${catId}` && req.method === "GET") {
       const { foundCat } = await findNeededCat();
@@ -62,7 +62,7 @@ module.exports = async (req, res) => {
       await fsPromises.writeFile(path.join(__dirname, "..", urlPath), await fsPromises.readFile(catPhoto.filepath));
       await fsPromises.writeFile(catsPath, JSON.stringify(allCatData, null, 2));
 
-      res.writeHead(301, { location: "/" });
+      res.writeHead(302, { location: "/" });
       res.end();
     } else {
       return true;
