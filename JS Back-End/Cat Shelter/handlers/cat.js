@@ -129,10 +129,13 @@ module.exports = async (req, res) => {
         };
         allCatData.push(catData);
 
-        const imagePath = path.join(__dirname, "..", "content", "images", formCatData.filename);
-        await fsPromises.writeFile(imagePath, formCatData.upload, 'binary');
+        if (formCatData.upload) {
+          const imagePath = path.join(__dirname, "..", "content", "images", formCatData.filename);
+          await fsPromises.writeFile(imagePath, formCatData.upload, "binary");
+        }
+        await fsPromises.writeFile(pathCats, JSON.stringify(allCatData, null, 2));
 
-        res.writeHead(302, { location: "/cats/add-cat" });
+        res.writeHead(302, { location: "/" });
         res.end();
       })
       .on("error", (err) => {
