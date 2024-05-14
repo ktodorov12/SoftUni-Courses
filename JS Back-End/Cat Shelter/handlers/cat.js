@@ -7,7 +7,7 @@ const formidable = require("formidable");
 const breeds = require("../data/breeds.json");
 const cats = require("../data/cats.json");
 const breedTemplate = require("../views/templates/breedsTemplate");
-const { IncomingMessage } = require("http");
+const { EOL } = require("os");
 
 module.exports = async (req, res) => {
   const pathname = req.url;
@@ -58,51 +58,99 @@ module.exports = async (req, res) => {
     //   throw new Error(error?.message);
     // }
 
+    // res.writeHead(302, { location: "/" });
+    // res.end();
     ////////Formidable Event approach////////
-    const form = new formidable.IncomingForm();
+    // const form = new formidable.IncomingForm();
 
-    const fields = {};
-    const files = {};
+    // const fields = {};
+    // const files = {};
 
-    form
-      .on("field", (fieldName, value) => {
-        fields[fieldName] = value;
-      })
-      .on("file", (fieldName, file) => {
-        files[fieldName] = file;
+    // form
+    //   .on("field", (fieldName, value) => {
+    //     fields[fieldName] = value;
+    //   })
+    //   .on("file", (fieldName, file) => {
+    //     files[fieldName] = file;
+    //   })
+    //   .on("end", async () => {
+    //     console.log(files);
+    //     console.log(fields);
+
+    //     const catImageData = files.upload;
+    //     const imagePath = path.join(__dirname, "../content/images", catImageData.originalFilename);
+    //     await fsPromises.writeFile(imagePath, await fsPromises.readFile(catImageData.filepath));
+
+    //     const catPath = path.join(__dirname, "../data/cats.json");
+    //     const allCatData = JSON.parse(await fsPromises.readFile(catPath));
+    //     const catData = {
+    //       id: allCatData[allCatData.length - 1].id + 1 || 1,
+    //       name: fields.name,
+    //       description: fields.description,
+    //       breed: fields.breed,
+    //       imageUrl: `/content/images/${catImageData.originalFilename}`
+    //     };
+
+    //     allCatData.push(catData);
+    //     await fsPromises.writeFile(catPath, JSON.stringify(allCatData, null, 2));
+    //   })
+    //   .on("error", (err) => {
+    //     console.log(err);
+    //     throw new Error(err);
+    //   });
+
+    // await form.parse(req);
+
+    // res.writeHead(302, { location: "/" });
+    // res.end();
+    ////////Pure Node.js approach////////
+    let data = [];
+
+    req
+      .on("data", (chunk) => {
+        data.push(chunk);
       })
       .on("end", async () => {
-        console.log(files);
-        console.log(fields);
+        const bufferData = Buffer.concat(data);
+        const parsedData = bufferData.toString("binary");
+        const boundry = req.headers["content-type"].match(`boundary=(.+)`).at(1);
 
-        const catImageData = files.upload;
-        const imagePath = path.join(__dirname, "../content/images", catImageData.originalFilename);
-        await fsPromises.writeFile(imagePath, await fsPromises.readFile(catImageData.filepath));
+        const allFormData = parsedData.split(`--${boundry}`);
+        const formCatData = dataParser(allFormData);
 
-        const catPath = path.join(__dirname, "../data/cats.json");
-        const allCatData = JSON.parse(await fsPromises.readFile(catPath));
+        const pathCats = path.join(__dirname, "..", "data", "cats.json");
+        const allCatData = JSON.parse(await fsPromises.readFile(pathCats));
         const catData = {
-          id: allCatData[allCatData.length - 1].id + 1 || 1,
-          name: fields.name,
-          description: fields.description,
-          breed: fields.breed,
-          imageUrl: `/content/images/${catImageData.originalFilename}`
+          id: Number(allCatData[allCatData.length - 1].id) + 1 || 1,
+          name: formCatData.name,
+          description: formCatData.description,
+          breed: formCatData.breed,
+          imageUrl: `/content/images/${formCatData.filename}`,
         };
-
         allCatData.push(catData);
-        await fsPromises.writeFile(catPath, JSON.stringify(allCatData, null, 2));
+
+        const imagePath = path.join(__dirname, "..", "content", "images", formCatData.filename);
+        await fsPromises.writeFile(imagePath, formCatData.upload, 'binary');
+
+        res.writeHead(302, { location: "/cats/add-cat" });
+        res.end();
       })
       .on("error", (err) => {
         console.log(err);
-        throw new Error(err);
+        let statusCode = 500;
+        let errorMessage = "Internal Server Error";
+
+        if (err instanceof SyntaxError || err.code === "ENOENT") {
+          statusCode = 404;
+          errorMessage = "Resource not found";
+        } else if (err instanceof TypeError) {
+          statusCode = 400;
+          errorMessage = "Bad request";
+        }
+
+        res.writeHead(statusCode, { "Content-Type": "text/plain" });
+        res.end(errorMessage);
       });
-
-    await form.parse(req);
-
-    ////////Pure Node.js approach////////
-
-    res.writeHead(302, { location: "/" });
-    res.end();
   } else if (pathname === "/cats/add-breed" && req.method === "GET") {
     const filePath = path.normalize(path.join(__dirname, "..", "views", "addBreed.html"));
 
@@ -150,3 +198,22 @@ module.exports = async (req, res) => {
     return true;
   }
 };
+
+function dataParser(data) {
+  const obj = {};
+
+  for (let el of data) {
+    const [metaData, value] = el.split(EOL + EOL);
+
+    const key = metaData.split("name=").at(1)?.split('"').at(1);
+    if (!key) continue;
+
+    obj[key] = value.trim();
+
+    if (metaData.includes("filename")) {
+      obj.filename = metaData.match(`filename="(.+)"`)?.at(1);
+    }
+  }
+
+  return obj;
+}
