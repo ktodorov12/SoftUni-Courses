@@ -10,4 +10,6 @@ app.use(express.urlencoded({ extended: true }));
 app.set("view engine", ".hbs");
 app.use(".hbs", hbs.engine);
 
+app.use("/static", express.static("public"));
+
 app.listen(port, () => console.log(`Server is listening on port ${port}`));
