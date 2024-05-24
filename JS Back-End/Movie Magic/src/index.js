@@ -9,9 +9,9 @@ const hbs = handlebars.create({ extname: ".hbs" });
 
 app.use(express.urlencoded({ extended: true }));
 app.set("view engine", ".hbs");
-app.use(".hbs", hbs.engine);
+app.engine(".hbs", hbs.engine);
 
-app.use("/static", express.static("public"));
+app.use("/static", express.static("static"));
 
 app.get("/", home);
 
