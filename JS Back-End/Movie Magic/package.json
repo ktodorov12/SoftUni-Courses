@@ -12,7 +12,6 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.19.2",
-    "express-handlebars": "^7.1.2",
-    "nodemon": "^3.1.0"
+    "express-handlebars": "^7.1.2"
   }
 }
