@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const { home: homeView, about, search, details } = require("../controllers/catalog");
 const { createView, postCreate } = require("../controllers/create");
-const { nodFound } = require("../controllers/nodFound");
+const { notFound } = require("../controllers/notFound");
 
 const router = Router();
 
@@ -13,6 +13,6 @@ router.route("/create")
         .post(postCreate);
 router.get("/details/:id", details);
 
-router.get("*", nodFound);
+router.get("*", notFound);
 
 module.exports = router;
