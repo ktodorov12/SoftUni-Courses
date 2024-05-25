@@ -4,5 +4,8 @@ module.exports = {
   },
   about: (req, res) => {
     res.render("about");
-  }
+  },
+  search: (req, res) => {
+    res.render("search");
+  },
 };
