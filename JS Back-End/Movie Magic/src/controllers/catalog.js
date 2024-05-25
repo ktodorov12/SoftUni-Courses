@@ -1,6 +1,10 @@
+const { allMovies } = require("../services/movies");
+
 module.exports = {
-  home: (req, res) => {
-    res.render("home");
+  home: async (req, res) => {
+    const movies = await allMovies();
+
+    res.render("home", { movies });
   },
   about: (req, res) => {
     res.render("about");
@@ -10,5 +14,5 @@ module.exports = {
   },
   details: (req, res) => {
     res.render("details");
-  }
+  },
 };
