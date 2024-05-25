@@ -8,4 +8,7 @@ module.exports = {
   search: (req, res) => {
     res.render("search");
   },
+  details: (req, res) => {
+    res.render("details");
+  }
 };
