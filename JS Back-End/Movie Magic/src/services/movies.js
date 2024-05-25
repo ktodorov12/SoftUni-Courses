@@ -34,5 +34,28 @@ module.exports = {
     const movie = movieModel(data);
     await writeDatabase(movie);
     return movie;
-  }
+  },
+  searchMovie: async ({ title, genre, year }) => {
+    const movies = await readDatabase();
+
+    if (!title && !genre && !year) {
+      return movies.map(movieModel);
+    }
+
+    const found = movies.filter((m) => {
+      if (title && !m.title.toLowerCase().includes(title.toLowerCase())) {
+        return false;
+      }
+      if (genre && m.genre.toLowerCase() != genre.toLowerCase()) {
+        return false;
+      }
+      if (year && m.year != year) {
+        return false;
+      }
+
+      return true;
+    });
+
+    return found;
+  },
 };

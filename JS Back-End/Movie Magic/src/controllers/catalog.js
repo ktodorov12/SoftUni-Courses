@@ -1,4 +1,4 @@
-const { allMovies, movieById } = require("../services/movies");
+const { allMovies, movieById, searchMovie } = require("../services/movies");
 
 module.exports = {
   home: async (req, res) => {
@@ -9,8 +9,10 @@ module.exports = {
   about: (req, res) => {
     res.render("about");
   },
-  search: (req, res) => {
-    res.render("search");
+  search: async (req, res) => {
+    const movies = await searchMovie(req.query);
+
+    res.render("search", { movies, query: req.query });
   },
   details: async (req, res) => {
     const { id } = req.params;
