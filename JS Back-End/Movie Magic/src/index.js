@@ -1,14 +1,13 @@
 const express = require("express");
 const { home } = require("./controllers/catalog");
 const { hbsConfig } = require("./config/hbs");
+const { expressConfig } = require("./config/express");
 
 const app = express();
 const port = process.env.PORT || 5000;
 
 hbsConfig(app);
-app.use(express.urlencoded({ extended: true }));
-
-app.use("/static", express.static("static"));
+expressConfig(app);
 
 app.get("/", home);
 
