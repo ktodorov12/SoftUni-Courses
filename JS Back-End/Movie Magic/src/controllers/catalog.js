@@ -17,6 +17,11 @@ module.exports = {
   details: async (req, res) => {
     const { id } = req.params;
     const foundMovie = await movieById(id);
+
+    if(!foundMovie) {
+      return res.render("404");
+    }
+
     foundMovie.starAmount = "&#x2605".repeat(foundMovie.rating);
 
     res.render("details", { movie: foundMovie });
