@@ -1,4 +1,4 @@
-const { allMovies } = require("../services/movies");
+const { allMovies, movieById } = require("../services/movies");
 
 module.exports = {
   home: async (req, res) => {
@@ -12,7 +12,11 @@ module.exports = {
   search: (req, res) => {
     res.render("search");
   },
-  details: (req, res) => {
-    res.render("details");
+  details: async (req, res) => {
+    const { id } = req.params;
+    const foundMovie = await movieById(id);
+    foundMovie.starAmount = "&#x2605".repeat(foundMovie.rating);
+
+    res.render("details", { movie: foundMovie });
   },
 };
