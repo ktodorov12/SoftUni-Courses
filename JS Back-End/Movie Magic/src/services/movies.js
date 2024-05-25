@@ -10,7 +10,9 @@ async function readDatabase() {
 }
 
 async function writeDatabase(data) {
-  await fs.writeFile(dataPath, data);
+  const movies = JSON.parse(await fs.readFile(dataPath));
+  movies.push(data);
+  await fs.writeFile(dataPath, JSON.stringify(movies, null, 2));
 }
 
 function movieModel(movie) {
@@ -27,4 +29,10 @@ module.exports = {
     const foundMovie = movies.find((m) => m.id == id);
     return movieModel(foundMovie);
   },
+  createMovie: async (data) => {
+    data.id = 5; // TODO: fix hardcoded id;
+    const movie = movieModel(data);
+    await writeDatabase(movie);
+    return movie;
+  }
 };
