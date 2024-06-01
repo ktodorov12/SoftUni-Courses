@@ -1,23 +1,45 @@
-class Movie {
-  id;
-  title;
-  genre;
-  director;
-  year;
-  imageUrl;
-  rating;
-  description;
+const { Schema, SchemaTypes: Types, model } = require("mongoose");
 
-  constructor({ id, title, genre, director, year, imageUrl, rating, description }) {
-    this.id = id;
-    this.title = title;
-    this.genre = genre;
-    this.director = director;
-    this.year = Number(year);
-    this.imageUrl = imageUrl;
-    this.rating = Number(rating);
-    this.description = description;
-  }
-}
+const movieSchema = new Schema({
+  title: {
+    type: "String",
+    reqired: true,
+  },
+  genre: {
+    type: "String",
+    reqired: true,
+  },
+  director: {
+    type: "String",
+    reqired: true,
+  },
+  year: {
+    type: "String",
+    reqired: true,
+    min: 1980,
+    max: 3100,
+  },
+  rating: {
+    type: "String",
+    reqired: true,
+    min: 1,
+    max: 5,
+  },
+  description: {
+    type: "String",
+    reqired: true,
+    max: 1000,
+  },
+  imageUrl: {
+    type: "String",
+    reqired: true,
+    match: [/^http/, "invalid Url"],
+  },
+  cast: {
+    type: [Types.ObjectId],
+    default: [],
+    ref: "Cast",
+  },
+});
 
-module.exports = Movie;
+module.exports = model("Movie", movieSchema);
