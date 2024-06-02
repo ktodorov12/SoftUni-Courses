@@ -14,9 +14,8 @@ module.exports = {
     const { movieId } = req.params;
 
     const movie = await movieById(movieId);
-    const allCast = (await getAllCast()).map((c) => c._id = new ObjectId(c._id)).filter((c) => !movie.cast.includes(c._id));
-    console.log(movie.cast);
-    console.log(allCast);
+    movie.cast = movie.cast.map(c => c.toString())
+    const allCast = (await getAllCast()).filter(c => !movie.cast.includes(c._id.toString()))
 
     res.render("cast-attach", { movie, allCast });
   },
