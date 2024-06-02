@@ -3,7 +3,16 @@ const Movie = require("../models/Movie");
 module.exports = {
   allMovies: async () => await Movie.find().lean(),
   movieById: async (id) => await Movie.findById(id).populate("cast").lean(),
-  createMovie: async (data) => await Movie.create(data),
+  createMovie: async (data) =>
+    await Movie.create({
+      title: data.title,
+      genre: data.genre,
+      director: data.director,
+      year: data.year,
+      rating: data.rating,
+      description: data.description,
+      imageUrl: data.imageUrl,
+    }),
   searchMovie: async ({ title, genre, year }) => {
     const movies = await Movie.find().lean();
 
