@@ -1,4 +1,4 @@
-const { allMovies, movieById, searchMovie } = require("../services/movies");
+const { allMovies, searchMovie, getPopuplatedMovie } = require("../services/movies");
 
 module.exports = {
   home: async (req, res) => {
@@ -16,9 +16,9 @@ module.exports = {
   },
   details: async (req, res) => {
     const { id } = req.params;
-    const foundMovie = await movieById(id);
+    const foundMovie = await getPopuplatedMovie(id);
 
-    if(!foundMovie) {
+    if (!foundMovie) {
       return res.render("404");
     }
 
