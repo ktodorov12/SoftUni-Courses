@@ -3,12 +3,20 @@ const { home: homeView, about, search, details } = require("../controllers/catal
 const { createView, postCreate } = require("../controllers/movie");
 const { notFound } = require("../controllers/notFound");
 const { castView, postCast, attachCastView, attachCast } = require("../controllers/cast");
+const { showRegister, postRegister, showLogin, postLogin } = require("../controllers/user");
 
 const router = Router();
 
 router.get("/", homeView);
+router.route("/register")
+        .get(showRegister)
+        .post(postRegister)
+router.route("/login")
+        .get(showLogin)
+        .post(postLogin)
 router.get("/about", about);
 router.get("/search", search);
+
 router.route("/create")
         .get(createView)
         .post(postCreate);
