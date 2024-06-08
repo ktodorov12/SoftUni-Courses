@@ -36,9 +36,15 @@ module.exports = {
   },
   editPost: async (req, res) => {
     const { movieId } = req.params;
-    req.body.authorId = req.user.userId;
-    await editMovie(movieId, req.body);
-    res.redirect(`/details/${movieId}`);
+    let movie = req.body
+    movie.authorId = req.user.userId;
+    try {
+      await editMovie(movieId, movie);
+      res.redirect(`/details/${movieId}`);
+    } catch (error) {
+      let errors = { message: error.message };
+      res.render("create", { movie, errors });
+    }
   },
   deleteMovie: async (req, res) => {
     const { movieId } = req.params;
