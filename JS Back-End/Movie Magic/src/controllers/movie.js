@@ -21,5 +21,6 @@ module.exports = {
 
     const createdMovie = await createMovie(req.body);
     res.redirect(`/details/${createdMovie._id}`);
+    req.body.authorId = req.user.userId;
   },
 };

@@ -40,6 +40,11 @@ const movieSchema = new Schema({
     default: [],
     ref: "Cast",
   },
+  authorId: {
+    type: Types.ObjectId,
+    ref: "User",
+    reqired: true
+  }
 });
 
 module.exports = model("Movie", movieSchema);
