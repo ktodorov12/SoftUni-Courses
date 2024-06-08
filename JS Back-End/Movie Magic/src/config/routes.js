@@ -1,34 +1,40 @@
 const { Router } = require("express");
 const { home: homeView, about, search, details } = require("../controllers/catalog");
-const { createView, postCreate } = require("../controllers/movie");
+const { createView, postCreate, deleteMovie, editGet, editPost } = require("../controllers/movie");
 const { notFound } = require("../controllers/notFound");
 const { castView, postCast, attachCastView, attachCast } = require("../controllers/cast");
-const { showRegister, postRegister, showLogin, postLogin } = require("../controllers/user");
+const { showRegister, postRegister, showLogin, postLogin, logout } = require("../controllers/user");
+const { isGuest, isUser, isOwner } = require("../middlewares/guards");
 
 const router = Router();
 
 router.get("/", homeView);
 router.route("/register")
-        .get(showRegister)
-        .post(postRegister)
+        .get(isUser(), showRegister)
+        .post(isUser(), postRegister);
 router.route("/login")
-        .get(showLogin)
-        .post(postLogin)
+        .get(isUser(), showLogin)
+        .post(isUser(), postLogin);
+router.get("/logout", logout);
 router.get("/about", about);
 router.get("/search", search);
 
 router.route("/create")
-        .get(createView)
-        .post(postCreate);
+        .get(isGuest(), createView)
+        .post(isGuest(), postCreate);
 router.get("/details/:id", details);
+router.route("/edit/:movieId")
+        .get(isGuest(), isOwner(), editGet)
+        .post(isGuest(), isOwner(), editPost);
+router.get("/delete/:movieId", isGuest(), isOwner(), deleteMovie);
 
 router.route("/cast")
-        .get(castView)
-        .post(postCast);
+        .get(isGuest(), castView)
+        .post(isGuest(), postCast);
 
 router.route("/attach/:movieId")
-        .get(attachCastView)
-        .post(attachCast);
+        .get(isGuest(), isOwner(), attachCastView)
+        .post(isGuest(), isOwner(), attachCast);
 
 router.get("*", notFound);
 
