@@ -1,3 +1,9 @@
+{{#if errors}}
+<div class="error-container">
+    <p>{{errors.message}}</p>
+</div>
+{{/if}}
+
 <section id="login-page">
   <div class="loginSection">
     <div class="info">
@@ -8,7 +14,7 @@
       <ul class="noBullet">
         <li>
           <label for="email">Email:</label>
-          <input type="text" class="inputFields" id="email" name="email" value="{{email}}" />
+          <input type="text" class="inputFields" id="email" name="email" {{#if errors}}value="{{errors.email}}"{{/if}} />
         </li>
         <li>
           <label for="password">Password:</label>
