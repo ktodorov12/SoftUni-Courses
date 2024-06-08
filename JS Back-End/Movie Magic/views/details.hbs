@@ -18,7 +18,14 @@
 
           <p class="disc">{{description}}</p>
         </div>
+        {{#if isAuthor}}
+        <div class="details-btn">
+          <a id="edit-button" href="/edit/{{_id}}">Edit</a>
+          <a id="delete-button">Delete</a>
+        </div>
+        {{/if}}
       </div>
+      
       <div class="card_right">
         <img src="{{imageUrl}}" alt="image" />
       </div>
