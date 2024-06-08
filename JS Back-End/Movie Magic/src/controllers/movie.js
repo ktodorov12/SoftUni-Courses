@@ -1,4 +1,4 @@
-const { createMovie } = require("../services/movies");
+const { createMovie, deleteById, movieById, editMovie } = require("../services/movies");
 
 module.exports = {
   createView: (req, res) => {
@@ -16,11 +16,33 @@ module.exports = {
     };
 
     if (Object.values(errors).includes(true)) {
+      errors.message = "All fileds are required";
       return res.render("create", { movie: req.body, errors });
     }
 
-    const createdMovie = await createMovie(req.body);
-    res.redirect(`/details/${createdMovie._id}`);
     req.body.authorId = req.user.userId;
+    try {
+      const createdMovie = await createMovie(req.body);
+      res.redirect(`/details/${createdMovie._id}`);
+    } catch (error) {
+      let errors = { message: error.message };
+      res.render("create", { errors });
+    }
+  },
+  editGet: async (req, res) => {
+    const { movieId } = req.params;
+    const foundMovie = await movieById(movieId);
+    res.render("edit", { movie: foundMovie });
+  },
+  editPost: async (req, res) => {
+    const { movieId } = req.params;
+    req.body.authorId = req.user.userId;
+    await editMovie(movieId, req.body);
+    res.redirect(`/details/${movieId}`);
+  },
+  deleteMovie: async (req, res) => {
+    const { movieId } = req.params;
+    await deleteById(movieId);
+    res.redirect("/");
   },
 };
