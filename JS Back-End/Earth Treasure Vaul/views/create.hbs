@@ -3,14 +3,14 @@
   <section id="create">
     <div class="form">
       <h2>Add Stone</h2>
-      <form class="create-form" method="" action="#">
-        <input type="text" name="" id="name" placeholder="Name" />
-        <input type="text" name="" id="category" placeholder="Category" />
-        <input type="text" name="" id="color" placeholder="Color" />
-        <input type="text" name="" id="stone-img" placeholder="Image" />
-        <input type="text" name="" id="location" placeholder="Location" />
-        <input type="text" name="" id="formula" placeholder="Formula" />
-        <textarea id="description" placeholder="Description..." name=""></textarea>
+      <form class="create-form" method="post">
+        <input type="text" name="name" id="name" placeholder="Name" value="{{stone.name}}"/>
+        <input type="text" name="category" id="category" placeholder="Category" value="{{stone.category}}"/>
+        <input type="text" name="color" id="color" placeholder="Color" value="{{stone.color}}"/>
+        <input type="text" name="imageUrl" id="stone-img" placeholder="Image" value="{{stone.imageUrl}}"/>
+        <input type="text" name="location" id="location" placeholder="Location" value="{{stone.location}}"/>
+        <input type="text" name="formula" id="formula" placeholder="Formula" value="{{stone.formula}}"/>
+        <textarea id="description" placeholder="Description..." name="description">{{stone.description}}</textarea>
 
         <button type="submit">Create</button>
       </form>

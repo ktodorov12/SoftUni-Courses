@@ -8,25 +8,15 @@
   </section>
 
   <section id="last-added">
+    {{#each stones}}
     <div>
-      <img src="./static/images/amethyst.jpg" />
-      <p>Name: Amethyst</p>
-      <p>Category: Silicate mineral</p>
-      <a class="details-btn" href="#">Details</a>
+      <img src="{{imageUrl}}" />
+      <p>Name: {{name}}</p>
+      <p>Category: {{category}}</p>
+      <a class="details-btn" href="/details/{{_id}}">Details</a>
     </div>
-    <div>
-      <img src="./static/images/beryl.webp" />
-      <p>Name: Beryl</p>
-      <p>Category: Cyclosilicate</p>
-      <a class="details-btn" href="#">Details</a>
-    </div>
-    <div>
-      <img src="./static/images/quartz.jpg" />
-      <p>Name: Quartz</p>
-      <p>Category: Silicate mineral</p>
-      <a class="details-btn" href="#">Details</a>
-    </div>
-
-    <!-- <p class="no-post">There are no gems and minerals!</p> -->
+    {{else}}
+    <p class="no-post">There are no gems and minerals!</p>
+    {{/each}}
   </section>
 </main>
