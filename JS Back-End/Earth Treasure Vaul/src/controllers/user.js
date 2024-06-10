@@ -12,7 +12,7 @@ module.exports = {
       res.cookie("user", token, { httpOnly: true });
       res.redirect("/");
     } catch (error) {
-      res.redirect("/login");
+      res.render("login", { email: req.body.email });
     }
   },
   registerGet: (req, res) => {
@@ -25,7 +25,7 @@ module.exports = {
       res.cookie("user", token, { httpOnly: true });
       res.redirect("/");
     } catch (error) {
-      res.redirect("/register");
+      res.render("register", { email: req.body.email });
     }
   },
   logout: (req, res) => {
