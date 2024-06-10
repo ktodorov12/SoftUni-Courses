@@ -1,11 +1,19 @@
+const { getStonesHome, getStonesDashboard, searchForStone } = require("../services/stones");
+
 module.exports = {
-  home: (req, res) => {
-    res.render("home");
+  home: async (req, res) => {
+    const stones = await getStonesHome();
+
+    res.render("home", { stones });
   },
-  dashboard: (req, res) => {
-    res.render("dashboard");
+  dashboard: async (req, res) => {
+    const stones = await getStonesDashboard();
+
+    res.render("dashboard", { stones });
   },
-  search: (req, res) => {
-    res.render("search");
+  search: async (req, res) => {
+    const stones = await searchForStone(req.query);
+
+    res.render("search", { stones });
   },
 };
