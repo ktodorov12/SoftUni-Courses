@@ -1,10 +1,16 @@
-const { createStone, likeStone, getStoneById, editStone, deleteStoneId } = require("../services/stones");
+const { Router } = require("express");
 
-module.exports = {
-  stonesGet: (req, res) => {
+const { createStone, likeStone, getStoneById, editStone, deleteStoneId } = require("../services/stones");
+const { isGuest, isOwner, isUser } = require("../middlewares/guards");
+
+const stoneRouter = Router();
+
+stoneRouter
+  .route("/stones")
+  .get(isGuest(), (req, res) => {
     res.render("create");
-  },
-  stonesPost: async (req, res) => {
+  })
+  .post(isGuest(), async (req, res) => {
     const errors = {
       name: !req.body.name,
       category: !req.body.category,
@@ -27,20 +33,24 @@ module.exports = {
       res.render("create", { stone: req.body, errors });
       console.log(error);
     }
-  },
-  like: async (req, res) => {
-    const { stoneId } = req.params;
-    const { userId } = req.user;
-    await likeStone(stoneId, userId);
-    res.redirect("/");
-  },
-  editGet: async (req, res) => {
+  });
+
+stoneRouter.get("/like/:stoneId", isGuest(), async (req, res) => {
+  const { stoneId } = req.params;
+  const { userId } = req.user;
+  await likeStone(stoneId, userId);
+  res.redirect("/");
+});
+
+stoneRouter
+  .route("/edit/:stoneId")
+  .get(isGuest(), isOwner(), async (req, res) => {
     const { stoneId } = req.params;
     const stone = await getStoneById(stoneId);
 
     res.render("edit", { stone });
-  },
-  editPost: async (req, res) => {
+  })
+  .post(isGuest(), isOwner(), async (req, res) => {
     const { stoneId } = req.params;
     let data = req.body;
     data.ownerId = req.user.userId;
@@ -51,13 +61,14 @@ module.exports = {
     } catch (error) {
       res.render("create");
     }
-  },
-  deleteStone: async (req, res) => {
-    try {
-      await deleteStoneId(req.params.stoneId);
-      res.redirect("/dashboard");
-    } catch (error) {
-      console.log(error);
-    }
-  },
-};
+  });
+stoneRouter.get("/delete/:stoneId", isGuest(), isOwner(), async (req, res) => {
+  try {
+    await deleteStoneId(req.params.stoneId);
+    res.redirect("/dashboard");
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+module.exports = { stoneRouter };
