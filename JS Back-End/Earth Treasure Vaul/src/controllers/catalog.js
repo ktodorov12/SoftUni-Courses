@@ -1,19 +1,25 @@
+const { Router } = require("express");
+
 const { getStonesHome, getStonesDashboard, searchForStone } = require("../services/stones");
 
-module.exports = {
-  home: async (req, res) => {
-    const stones = await getStonesHome();
+const catalogRouter = Router();
 
-    res.render("home", { stones });
-  },
-  dashboard: async (req, res) => {
-    const stones = await getStonesDashboard();
+catalogRouter.get("/", async (req, res) => {
+  const stones = await getStonesHome();
 
-    res.render("dashboard", { stones });
-  },
-  search: async (req, res) => {
-    const stones = await searchForStone(req.query);
+  res.render("home", { stones });
+});
 
-    res.render("search", { stones });
-  },
-};
+catalogRouter.get("/dashboard", async (req, res) => {
+  const stones = await getStonesDashboard();
+
+  res.render("dashboard", { stones });
+});
+
+catalogRouter.get("/search", async (req, res) => {
+  const stones = await searchForStone(req.query);
+
+  res.render("search", { stones });
+});
+
+module.exports = { catalogRouter };
