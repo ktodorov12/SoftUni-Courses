@@ -9,7 +9,7 @@ function Square({ value, onSquareClick }) {
 }
 
 function Board({ xIsNext, squares, onPlay }) {
-  function hanleClick(i) {
+  function handleClick(i) {
     if (squares[i] || calculateWinner(squares)) {
       return;
     }
@@ -23,25 +23,18 @@ function Board({ xIsNext, squares, onPlay }) {
   const winner = calculateWinner(squares);
   let status = winner ? `Winner: ${winner}` : `Next player: ${xIsNext ? "X" : "O"}`;
 
+  const jsxSquares = Array.from({ length: 3 }, (_, rowIndex) => {
+    const rows = Array.from({ length: 3 }, (_, colIndex) => {
+      const currentSqrMove = rowIndex * 3 + colIndex;
+      return <Square value={squares[currentSqrMove]} onSquareClick={() => handleClick(currentSqrMove)} />;
+    });
+    return <div className="board-row">{rows}</div>;
+  });
+
   return (
     <>
       <div className="status">{status}</div>
-      <div className="board-row">
-        <Square value={squares[0]} onSquareClick={() => hanleClick(0)} />
-        <Square value={squares[1]} onSquareClick={() => hanleClick(1)} />
-        <Square value={squares[2]} onSquareClick={() => hanleClick(2)} />
-      </div>
-      <div className="board-row">
-        <Square value={squares[3]} onSquareClick={() => hanleClick(3)} />
-        <Square value={squares[4]} onSquareClick={() => hanleClick(4)} />
-        <Square value={squares[5]} onSquareClick={() => hanleClick(5)} />
-      </div>
-
-      <div className="board-row">
-        <Square value={squares[6]} onSquareClick={() => hanleClick(6)} />
-        <Square value={squares[7]} onSquareClick={() => hanleClick(7)} />
-        <Square value={squares[8]} onSquareClick={() => hanleClick(8)} />
-      </div>
+      {jsxSquares}
     </>
   );
 }
@@ -64,16 +57,8 @@ export default function Game() {
 
   const moves = history.map((squares, move) => {
     const description = move > 0 ? `Go to move#${move}` : "Go to game start";
-    const currentText = move > 0 ? `You are at move#${move}` : "You are at the game start"
-    return (
-      <li key={move}>
-        {
-        currentMove !== move 
-          ? <button onClick={() => jumpTo(move)}>{description}</button>
-          : <p>{currentText}</p>
-        }
-      </li>
-    );
+    const currentText = move > 0 ? `You are at move#${move}` : "You are at the game start";
+    return <li key={move}>{currentMove !== move ? <button onClick={() => jumpTo(move)}>{description}</button> : <p>{currentText}</p>}</li>;
   });
 
   return (
