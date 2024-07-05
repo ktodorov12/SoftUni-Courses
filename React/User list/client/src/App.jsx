@@ -1,5 +1,5 @@
 import Header from "./components/Header";
-import UserCardContainer from "./components/UserCardContainer";
+import MainContainer from "./components/MainContainer";
 import Footer from "./components/Footer";
 
 function App() {
@@ -7,7 +7,7 @@ function App() {
     <>
       <Header></Header>
 
-      <UserCardContainer />
+      <MainContainer />
 
       <Footer />
     </>

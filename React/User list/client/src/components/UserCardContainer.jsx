@@ -1,7 +1,6 @@
 export default function UserCardContainer() {
   return (
     <>
-    <main className="main">
       <section className="card users-container">
         {/* <!-- Search bar component --> */}
         <form className="search-form">
@@ -524,7 +523,6 @@ export default function UserCardContainer() {
         </div>
       </div>
     </div> --> */}
-    </main>
     </>
   );
 }
