@@ -1,10 +1,11 @@
+import Spinner from "./Spinner";
 import TableRow from "./TableRow";
 
-export default function Table() {
 export default function Table({ users, onDetails, onEdit, onDelete, isLoading }) {
   return (
     <>
       <div className="table-wrapper">
+        {isLoading && <Spinner />}
         <table className="table">
           <thead>
             <tr>
@@ -94,9 +95,15 @@ export default function Table({ users, onDetails, onEdit, onDelete, isLoading })
           </thead>
           <tbody>
             {/* <!-- Table row component --> */}
-            <TableRow />
+            {users.map((u) => (
+              <TableRow 
               key={u._id}
               user={u}
+              onDetails={onDetails}
+              onDelete={onDelete}
+              onEdit={onEdit}
+              />
+            ))}
           </tbody>
         </table>
       </div>
