@@ -14,6 +14,7 @@ export default function UserCardContainer() {
   const [createClicked, setCreateClicked] = useState(false);
 
   const [userDetails, setUserDetails] = useState(null);
+  const [editUserId, setEditUserId] = useState(null);
   const [deleteUserId, setDeleteUserId] = useState(null);
   useEffect(() => {
     (async function () {
@@ -27,6 +28,32 @@ export default function UserCardContainer() {
 
     setUsers([...users, createdUser]);
     setCreateClicked(false);
+    setIsLoading(false);
+  }
+
+  async function handleEdit(data) {
+    setIsLoading(true);
+    const userForEdit = users.find((u) => u._id == editUserId);
+
+    const final = Object.entries(data).map(([k, v]) => {
+      if (!v) {
+        v = userForEdit[k] || userForEdit.address[k];
+      }
+
+      return [k, v];
+    });
+
+    const body = {
+      ...Object.fromEntries(final),
+      createdAt: userForEdit.createdAt,
+    };
+
+    const editedUser = await editUser(body, editUserId);
+    const newUsers = users.slice();
+    newUsers.splice(users.indexOf(userForEdit), 1, editedUser);
+
+    setUsers(newUsers);
+    setEditUserId(null);
     setIsLoading(false);
   }
 
@@ -46,13 +73,20 @@ export default function UserCardContainer() {
         {createClicked && <CreateEditForm onCloseCreate={() => setCreateClicked(false)} onCreateUser={handleCreate} />}
 
         <Table />
+        {editUserId && <CreateEditForm onCloseCreate={() => setEditUserId(null)} onCreateUser={handleEdit} />}
+
         {userDetails && <UserDetails user={userDetails} onCloseDetails={() => setUserDetails(null)} />}
 
         <AddUserButton />
         {deleteUserId && <DeleteUser onDeleteUser={handleDelete} onClose={() => setDeleteUserId(null)} />}
 
+        <Table
           users={users}
+          onDetails={(userId) => setUserDetails(userId)}
+          onEdit={(userId) => setEditUserId(userId)}
           onDelete={(userId) => setDeleteUserId(userId)}
+        />
+
         <AddUserButton onCreateClick={() => setCreateClicked(true)} />
 
         <Pagination />
