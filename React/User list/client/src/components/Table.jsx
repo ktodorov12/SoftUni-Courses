@@ -1,6 +1,7 @@
 import TableRow from "./TableRow";
 
 export default function Table() {
+export default function Table({ users, onDetails, onEdit, onDelete, isLoading }) {
   return (
     <>
       <div className="table-wrapper">
@@ -94,6 +95,8 @@ export default function Table() {
           <tbody>
             {/* <!-- Table row component --> */}
             <TableRow />
+              key={u._id}
+              user={u}
           </tbody>
         </table>
       </div>
