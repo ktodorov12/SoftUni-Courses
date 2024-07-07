@@ -1,13 +1,15 @@
-export default function CreateEditForm() {
+import { createSubmitHandler } from "../utils/formUtils";
+
+export default function CreateEditForm({ onCloseCreate, onCreateUser }) {
   return (
     <>
       <div className="overlay">
-        <div className="backdrop"></div>
+        <div className="backdrop" onClick={onCloseCreate}></div>
         <div className="modal">
           <div className="user-container">
             <header className="headers">
               <h2>Edit User/Add User</h2>
-              <button className="btn close">
+              <button className="btn close" onClick={onCloseCreate}>
                 <svg
                   aria-hidden="true"
                   focusable="false"
@@ -23,7 +25,8 @@ export default function CreateEditForm() {
                 </svg>
               </button>
             </header>
-            <form>
+            <form
+              onSubmit={createSubmitHandler(onCreateUser)}>
               <div className="form-row">
                 <div className="form-group">
                   <label htmlFor="firstName">First name</label>
@@ -121,7 +124,7 @@ export default function CreateEditForm() {
                 <button id="action-save" className="btn" type="submit">
                   Save
                 </button>
-                <button id="action-cancel" className="btn" type="button">
+                <button id="action-cancel" className="btn" type="button" onClick={onCloseCreate}>
                   Cancel
                 </button>
               </div>
