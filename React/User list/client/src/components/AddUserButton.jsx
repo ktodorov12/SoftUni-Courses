@@ -1,3 +1,7 @@
-export default function AddUserButton() {
-  return <button className="btn-add btn">Add new user</button>;
+export default function AddUserButton({ onCreateClick }) {
+  return (
+    <button className="btn-add btn" onClick={onCreateClick}>
+      Add new user
+    </button>
+  );
 }
