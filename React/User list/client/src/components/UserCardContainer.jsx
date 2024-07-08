@@ -25,11 +25,14 @@ export default function UserCardContainer() {
   const [currentPage, setCurrentPage] = useState(1);
   let pagStart = (currentPage - 1) * itemsPerPage;
 
+  const [sorter, setSorter] = useState("");
+
   const renderUsers = useCallback(async (currUsers) => {
-    setUsers(currUsers.slice(pagStart, itemsPerPage * pagStart || itemsPerPage));
+    const sortedUsers = currUsers.sort((a, b) => a[sorter]?.localeCompare(b[sorter]) || a[sorter] - b[sorter]);
+    setUsers(sortedUsers.slice(pagStart, itemsPerPage * pagStart || itemsPerPage));
     setIsLoading(false);
-    setAllPages(Math.ceil(currUsers.length / itemsPerPage));
-  }, [pagStart, itemsPerPage]);
+    setAllPages(Math.ceil(sortedUsers.length / itemsPerPage));
+  }, [pagStart, itemsPerPage, sorter]);
 
   useEffect(() => {
     (async function() {
@@ -115,6 +118,30 @@ export default function UserCardContainer() {
     setItemsPerPage(value);
   }
 
+  function handleSort(e) {
+    const text = e.target.textContent;
+    let key;
+    switch (text){
+      case "First name":
+        key = "firstName";
+        break;
+      case "Last name":
+        key = "lastName";
+        break;
+      case "Email":
+        key = "email";
+        break;
+      case "Phone":
+        key = "phoneNumber";
+        break;
+      case "Created":
+        key = "createdAt";
+        break;
+    }
+    
+    setSorter(key);
+  }
+
   return (
     <>
       <section className="card users-container">
@@ -134,6 +161,8 @@ export default function UserCardContainer() {
           onEdit={(userId) => setEditUserId(userId)}
           onDelete={(userId) => setDeleteUserId(userId)}
           isLoading={isLoading}
+          onSort={handleSort}
+          sorter={sorter}
         />
 
         <AddUserButton onCreateClick={() => setCreateClicked(true)} />
