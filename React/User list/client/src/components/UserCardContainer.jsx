@@ -19,6 +19,7 @@ export default function UserCardContainer() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchUsers, setSearchUsers] = useState([]);
 
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const [allPages, setAllPages] = useState(1);
@@ -27,7 +28,7 @@ export default function UserCardContainer() {
 
   const [sorter, setSorter] = useState("");
 
-  const renderUsers = useCallback(async (currUsers) => {
+  const renderUsers = useCallback((currUsers) => {
     const sortedUsers = currUsers.sort((a, b) => a[sorter]?.localeCompare(b[sorter]) || a[sorter] - b[sorter]);
     setUsers(sortedUsers.slice(pagStart, itemsPerPage * pagStart || itemsPerPage));
     setIsLoading(false);
@@ -36,9 +37,10 @@ export default function UserCardContainer() {
 
   useEffect(() => {
     (async function() {
-      await renderUsers(Object.values(await getAllUsers()));
+      const hasSearch = searchUsers.length > 0 ? searchUsers : null;
+      renderUsers(hasSearch || Object.values(await getAllUsers()));
     })();
-  }, [renderUsers]);
+  }, [renderUsers, searchUsers]);
 
 
   async function handleCreate(data) {
@@ -90,6 +92,7 @@ export default function UserCardContainer() {
     if (criteria === "empty" || !search) {
       const { origin } = window.location;
       window.history.pushState({ path: origin }, "", origin);
+      setSearchUsers([]);
       renderUsers(Object.values(await getAllUsers()));
       return;
     }
@@ -98,9 +101,9 @@ export default function UserCardContainer() {
     window.history.pushState({ path: url }, "", url);
 
     const allUsers = Object.values(await getAllUsers());
-    console.log(allUsers);
     const filteredUsers = allUsers.filter((u) => u[criteria].toLowerCase().includes(search.toLowerCase()));
-    renderUsers(filteredUsers);
+    setSearchUsers(filteredUsers);
+    renderUsers(searchUsers);
     setSearchQuery(search);
   }
 
@@ -109,6 +112,7 @@ export default function UserCardContainer() {
 
     const { origin } = window.location;
     window.history.pushState({ path: origin }, "", origin);
+    setSearchUsers([]);
     renderUsers(Object.values(await getAllUsers()));
     setSearchQuery("");
   }
