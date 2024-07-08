@@ -6,7 +6,7 @@ import CreateEditForm from "./CreateEditForm";
 import UserDetails from "./UserDetails";
 import DeleteUser from "./DeleteUser";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { createUser, deleteUser, editUser, getAllUsers } from "../data/data";
 
 export default function UserCardContainer() {
@@ -20,12 +20,23 @@ export default function UserCardContainer() {
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
 
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [allPages, setAllPages] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
+  let pagStart = (currentPage - 1) * itemsPerPage;
+
+  const renderUsers = useCallback(async (currUsers) => {
+    setUsers(currUsers.slice(pagStart, itemsPerPage * pagStart || itemsPerPage));
+    setIsLoading(false);
+    setAllPages(Math.ceil(currUsers.length / itemsPerPage));
+  }, [pagStart, itemsPerPage]);
+
   useEffect(() => {
-    (async function () {
-      setUsers(Object.values(await getAllUsers()));
-      setIsLoading(false);
+    (async function() {
+      await renderUsers(Object.values(await getAllUsers()));
     })();
-  }, []);
+  }, [renderUsers]);
+
 
   async function handleCreate(data) {
     setIsLoading(true);
@@ -76,15 +87,17 @@ export default function UserCardContainer() {
     if (criteria === "empty" || !search) {
       const { origin } = window.location;
       window.history.pushState({ path: origin }, "", origin);
-      setUsers(Object.values(await getAllUsers()));
+      renderUsers(Object.values(await getAllUsers()));
       return;
     }
 
     const url = `?search=${search}&criteria=${criteria}`;
     window.history.pushState({ path: url }, "", url);
 
-    const filteredUsers = users.filter((u) => u[criteria].toLowerCase().includes(search.toLowerCase()));
-    setUsers(filteredUsers);
+    const allUsers = Object.values(await getAllUsers());
+    console.log(allUsers);
+    const filteredUsers = allUsers.filter((u) => u[criteria].toLowerCase().includes(search.toLowerCase()));
+    renderUsers(filteredUsers);
     setSearchQuery(search);
   }
 
@@ -93,14 +106,19 @@ export default function UserCardContainer() {
 
     const { origin } = window.location;
     window.history.pushState({ path: origin }, "", origin);
-    setUsers(Object.values(await getAllUsers()));
+    renderUsers(Object.values(await getAllUsers()));
     setSearchQuery("");
+  }
+
+  function handleItemsPerPage(e) {
+    const value = Number(e.target.value);
+    setItemsPerPage(value);
   }
 
   return (
     <>
       <section className="card users-container">
-        <SearchBar onSearch={handleSearch} onClear={handleClearSearch} hasSearch={searchQuery}/>
+        <SearchBar onSearch={handleSearch} onClear={handleClearSearch} hasSearch={searchQuery} />
 
         {createClicked && <CreateEditForm onCloseCreate={() => setCreateClicked(false)} onCreateUser={handleCreate} />}
 
@@ -120,7 +138,15 @@ export default function UserCardContainer() {
 
         <AddUserButton onCreateClick={() => setCreateClicked(true)} />
 
-        <Pagination />
+        <Pagination 
+          onSetItems={handleItemsPerPage} 
+          currentPage={currentPage} 
+          allPages={allPages}
+          pageUp={() => setCurrentPage(currentPage + 1)}
+          pageDown={() => setCurrentPage(currentPage - 1)}
+          firstPage={() => setCurrentPage(1)}
+          lastPage={() => setCurrentPage(allPages)}
+        />
       </section>
     </>
   );
