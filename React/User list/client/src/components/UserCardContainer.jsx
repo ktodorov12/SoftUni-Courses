@@ -31,14 +31,15 @@ export default function UserCardContainer() {
   const [sorter, setSorter] = useState("");
 
   const renderUsers = useCallback((currUsers) => {
+    setIsLoading(false);
     if(currUsers.length == 0) {
+      setUsers([]);
       throw new Error("There is no users yet.");
     }
 
     setHasError("");
     const sortedUsers = currUsers.sort((a, b) => a[sorter]?.localeCompare(b[sorter]) || a[sorter] - b[sorter]);
     setUsers(sortedUsers.slice(pagStart, itemsPerPage * pagStart || itemsPerPage));
-    setIsLoading(false);
     setAllPages(Math.ceil(sortedUsers.length / itemsPerPage));
   }, [pagStart, itemsPerPage, sorter]);
 
@@ -59,8 +60,9 @@ export default function UserCardContainer() {
     try {
       setIsLoading(true);
       const createdUser = await createUser(data);
-  
-      renderUsers([...users, createdUser]);
+      const newUsers = [...users, createdUser];
+
+      renderUsers(newUsers);
       setCreateClicked(false);
     } catch (error) {
       setHasError(error.message);
@@ -106,12 +108,13 @@ export default function UserCardContainer() {
 
     try {
       await deleteUser(deleteUserId);
-      setDeleteUserId(null);
-      renderUsers(users.filter((u) => u._id !== deleteUserId));
+      renderUsers(Object.values(await getAllUsers()));
     } catch (error) {
       setHasError(error.message);
-      setIsLoading(false);
       return;
+    } finally {
+      setIsLoading(false);
+      setDeleteUserId(null);
     }
   }
 
