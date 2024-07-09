@@ -26,9 +26,16 @@ export default function UserCardContainer() {
   const [currentPage, setCurrentPage] = useState(1);
   let pagStart = (currentPage - 1) * itemsPerPage;
 
+  const [hasError, setHasError] = useState("");
+
   const [sorter, setSorter] = useState("");
 
   const renderUsers = useCallback((currUsers) => {
+    if(currUsers.length == 0) {
+      throw new Error("There is no users yet.");
+    }
+
+    setHasError("");
     const sortedUsers = currUsers.sort((a, b) => a[sorter]?.localeCompare(b[sorter]) || a[sorter] - b[sorter]);
     setUsers(sortedUsers.slice(pagStart, itemsPerPage * pagStart || itemsPerPage));
     setIsLoading(false);
@@ -37,19 +44,29 @@ export default function UserCardContainer() {
 
   useEffect(() => {
     (async function() {
-      const hasSearch = searchUsers.length > 0 ? searchUsers : null;
-      renderUsers(hasSearch || Object.values(await getAllUsers()));
+      try {
+        const hasSearch = searchUsers.length > 0 ? searchUsers : null;
+        renderUsers(hasSearch || Object.values(await getAllUsers()));
+      } catch (error) {
+        setHasError(error.message);
+        return;
+      }
     })();
   }, [renderUsers, searchUsers]);
 
 
   async function handleCreate(data) {
-    setIsLoading(true);
-    const createdUser = await createUser(data);
-
-    setUsers([...users, createdUser]);
-    setCreateClicked(false);
-    setIsLoading(false);
+    try {
+      setIsLoading(true);
+      const createdUser = await createUser(data);
+  
+      renderUsers([...users, createdUser]);
+      setCreateClicked(false);
+    } catch (error) {
+      setHasError(error.message);
+      setIsLoading(false);
+      return;
+    }
   }
 
   async function handleEdit(data) {
@@ -69,42 +86,67 @@ export default function UserCardContainer() {
       createdAt: userForEdit.createdAt,
     };
 
-    const editedUser = await editUser(body, editUserId);
-    const newUsers = users.slice();
-    newUsers.splice(users.indexOf(userForEdit), 1, editedUser);
-
-    setUsers(newUsers);
-    setEditUserId(null);
-    setIsLoading(false);
+    try {
+      const editedUser = await editUser(body, editUserId);
+      const newUsers = users.slice();
+      newUsers.splice(users.indexOf(userForEdit), 1, editedUser);
+  
+      renderUsers(newUsers);
+      setEditUserId(null);
+    } catch (error) {
+      setHasError(error.message);
+      setIsLoading(false);
+      return;
+    }
   }
 
   async function handleDelete(e) {
     setIsLoading(true);
     e.preventDefault();
 
-    await deleteUser(deleteUserId);
-    setUsers(users.filter((u) => u._id !== deleteUserId));
-    setDeleteUserId(null);
-    setIsLoading(false);
+    try {
+      await deleteUser(deleteUserId);
+      setDeleteUserId(null);
+      renderUsers(users.filter((u) => u._id !== deleteUserId));
+    } catch (error) {
+      setHasError(error.message);
+      setIsLoading(false);
+      return;
+    }
   }
 
   async function handleSearch({ search, criteria }) {
     if (criteria === "empty" || !search) {
       const { origin } = window.location;
       window.history.pushState({ path: origin }, "", origin);
-      setSearchUsers([]);
-      renderUsers(Object.values(await getAllUsers()));
-      return;
+      try {
+        setSearchUsers([]);
+        renderUsers(Object.values(await getAllUsers()));
+        return;
+      } catch (error) {
+        setHasError(error.message);
+        return;
+      }
     }
 
     const url = `?search=${search}&criteria=${criteria}`;
     window.history.pushState({ path: url }, "", url);
 
-    const allUsers = Object.values(await getAllUsers());
-    const filteredUsers = allUsers.filter((u) => u[criteria].toLowerCase().includes(search.toLowerCase()));
-    setSearchUsers(filteredUsers);
-    renderUsers(searchUsers);
-    setSearchQuery(search);
+    try {
+      const allUsers = Object.values(await getAllUsers());
+      const filteredUsers = allUsers.filter((u) => u[criteria].toLowerCase().includes(search.toLowerCase()));
+      setSearchQuery(search);
+
+      if(filteredUsers.length == 0) {
+        throw new Error("Sorry, we couldn't find what you're looking for.");
+      }
+
+      setSearchUsers(filteredUsers);
+      renderUsers(searchUsers);
+    } catch (error) {
+      setHasError(error.message);
+      return;
+    }
   }
 
   async function handleClearSearch(e) {
@@ -112,9 +154,14 @@ export default function UserCardContainer() {
 
     const { origin } = window.location;
     window.history.pushState({ path: origin }, "", origin);
-    setSearchUsers([]);
-    renderUsers(Object.values(await getAllUsers()));
-    setSearchQuery("");
+    try {
+      setSearchUsers([]);
+      renderUsers(Object.values(await getAllUsers()));
+      setSearchQuery("");
+    } catch (error) {
+      setHasError(error.message);
+      return;
+    }
   }
 
   function handleItemsPerPage(e) {
@@ -150,7 +197,7 @@ export default function UserCardContainer() {
     <>
       <section className="card users-container">
         <SearchBar onSearch={handleSearch} onClear={handleClearSearch} hasSearch={searchQuery} />
-
+        
         {createClicked && <CreateEditForm onCloseCreate={() => setCreateClicked(false)} onCreateUser={handleCreate} />}
 
         {editUserId && <CreateEditForm onCloseCreate={() => setEditUserId(null)} onCreateUser={handleEdit} />}
@@ -167,8 +214,9 @@ export default function UserCardContainer() {
           isLoading={isLoading}
           onSort={handleSort}
           sorter={sorter}
+          error={hasError}
         />
-
+        
         <AddUserButton onCreateClick={() => setCreateClicked(true)} />
 
         <Pagination 

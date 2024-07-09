@@ -1,3 +1,4 @@
+import Errors from "./Errors";
 import Spinner from "./Spinner";
 import TableRow from "./TableRow";
 
@@ -8,7 +9,8 @@ export default function Table({
   onDelete, 
   isLoading,
   onSort,
-  sorter
+  sorter,
+  error
 }) {
   return (
     <>
@@ -103,7 +105,9 @@ export default function Table({
           </thead>
           <tbody>
             {/* <!-- Table row component --> */}
-            {users.map((u) => (
+            {error 
+              ? <td><Errors errorText={error}/></td>
+              : users.map((u) => (
               <TableRow 
               key={u._id}
               user={u}
