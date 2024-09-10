@@ -1,0 +1,96 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
+}
+
+a {
+    text-decoration: none;
+    color: #575757;
+}
+
+ul {
+    list-style: none;
+}
+
+/* Navbar */
+.navbar {
+    background: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px;
+}
+
+.navbar ul li a {
+    text-transform: uppercase;
+    font-weight: 600;
+    transition: 0.5s;
+    
+}
+
+.navbar .logo {
+    display: flex;
+    align-items: center;
+}
+
+.navbar .logo {
+    margin-left: 30px;
+}
+
+.main-menu ul {
+    display: flex;
+    flex-direction: row;
+}
+
+.main-menu ul li {
+    margin: 20px;
+}
+
+.main-menu ul:last-child {
+    margin-right: 50px;
+}
+
+.navbar ul li a:hover {
+    color: #ffa734;
+}
+
+.navbar .search {
+    color: #48c0b0;
+}
+
+.navbar .triangle {
+    width: 0;
+    height: 0;
+    border-top: 12px solid transparent;   
+    border-bottom: 12px solid transparent; 
+    border-left: 13px solid #ff9100;   
+    margin-right: 1em; 
+    cursor: pointer;
+}
+
+.navbar .triangle:hover {
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-top: 13px solid #ff9100; 
+}
+
+/* Utils */
+/* Btns */
+.btn {
+    background: #ff9100;
+    padding: 0.7em 1.5em;
+    color: #fff;
+    border-radius: 50px;
+    box-shadow: -1px 5px 10px -6px #333;
+    transition: 0.5s;
+}
+
+.btn:hover {
+    background: #ddd6cc;
+}
